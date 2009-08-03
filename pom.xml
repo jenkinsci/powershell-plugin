@@ -8,8 +8,18 @@
   </parent>
   
   <artifactId>powershell</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.1.1-SNAPSHOT</version>
   <packaging>hpi</packaging>
   <name>Hudson PowerShell plugin</name>
   <url>http://wiki.hudson-ci.org/display/HUDSON/PowerShell+Plugin</url>
+    <description>Hotfix for the 1.1 version.
+This fixes the wrong quotes problem.
+Now
+powershell " &amp; 'D:\hudson\\Apache Tomcat 6.0.18\temp\test.ps1' "
+
+will be called instead of
+
+powershell ' &amp; "D:\hudson\Apache Tomcat 6.0.18\temp\test.ps1" '
+</description>
 </project>
+
