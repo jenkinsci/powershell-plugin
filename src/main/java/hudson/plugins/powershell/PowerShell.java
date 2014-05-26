@@ -24,7 +24,7 @@ public class PowerShell extends CommandInterpreter {
     }
 
     public String[] buildCommandLine(FilePath script) {
-        return new String[] { "powershell.exe","& \'"+script.getRemote()+"\'"};
+        return new String[] { "powershell.exe", "-ExecutionPolicy", "ByPass", "& \'" + script.getRemote() + "\'"};
     }
 
     protected String getContents() {
