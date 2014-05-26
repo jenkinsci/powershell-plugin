@@ -28,7 +28,7 @@ public class PowerShell extends CommandInterpreter {
     }
 
     protected String getContents() {
-        return command;
+        return command + "\r\nexit $LastExitCode";
     }
 
     @Extension
