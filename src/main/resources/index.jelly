@@ -1,4 +1,3 @@
 <div>
-  This plugin allows Hudson to invoke <a href="http://en.wikipedia.org/wiki/Windows_PowerShell">Windows PowerShell</a>
-  as build scripts.
+  This plugin allows Jenkins to invoke <a href="http://en.wikipedia.org/wiki/Windows_PowerShell">Windows PowerShell</a> as build scripts.
 </div>
