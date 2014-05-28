@@ -9,7 +9,7 @@ import hudson.tasks.CommandInterpreter;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
- * Invokes Windows power shell from Hudson.
+ * Invokes Windows PowerShell from Jenkins.
  * 
  * @author Kohsuke Kawaguchi
  */
@@ -23,12 +23,12 @@ public class PowerShell extends CommandInterpreter {
         return ".ps1";
     }
 
-    protected String[] buildCommandLine(FilePath script) {
-        return new String[] { "powershell.exe","& \'"+script.getRemote()+"\'"};
+    public String[] buildCommandLine(FilePath script) {
+        return new String[] { "powershell.exe", "-ExecutionPolicy", "ByPass", "& \'" + script.getRemote() + "\'"};
     }
 
     protected String getContents() {
-        return command;
+        return command + "\r\nexit $LastExitCode";
     }
 
     @Extension
