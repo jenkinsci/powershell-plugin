@@ -33,6 +33,11 @@ public class PowerShell extends CommandInterpreter {
 
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
+        @Override
+        public String getHelpFile() {
+            return "/plugin/powershell/help.html";
+        }
+        
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
             return true;
         }

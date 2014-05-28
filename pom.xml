@@ -13,6 +13,14 @@
   <name>Jenkins PowerShell plugin</name>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/PowerShell+Plugin</url>
   
+  <developers>
+    <developer>
+      <id>damienfinck</id>
+      <name>Damien Finck</name>
+      <email>damien.finck67+jenkins@gmail.com</email>
+    </developer>
+  </developers>
+  
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
