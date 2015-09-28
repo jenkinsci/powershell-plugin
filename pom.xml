@@ -19,6 +19,11 @@
       <name>Damien Finck</name>
       <email>damien.finck67+jenkins@gmail.com</email>
     </developer>
+    <developer>
+      <id>chrisalbrecht</id>
+      <name>Chris Albrecht</name>
+      <email>chris.albrecht+jenkins@gmail.com</email>
+    </developer>
   </developers>
   
   <scm>
