@@ -7,7 +7,7 @@
   </parent>
   
   <artifactId>powershell</artifactId>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.4-SNAPSHOT</version>
   <packaging>hpi</packaging>
   
   <name>Jenkins PowerShell plugin</name>
@@ -18,6 +18,11 @@
       <id>damienfinck</id>
       <name>Damien Finck</name>
       <email>damien.finck67+jenkins@gmail.com</email>
+    </developer>
+    <developer>
+      <id>chrisalbrecht</id>
+      <name>Chris Albrecht</name>
+      <email>chris.albrecht+jenkins@gmail.com</email>
     </developer>
   </developers>
   
