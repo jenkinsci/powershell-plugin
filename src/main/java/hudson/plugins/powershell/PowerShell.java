@@ -25,8 +25,8 @@ public class PowerShell extends CommandInterpreter {
     */
     @DataBoundConstructor
     public PowerShell(String command, boolean useProfile) {
-        this.useProfile = useProfile;
         super(command);
+        this.useProfile = useProfile;
     }
 
     protected String getFileExtension() {
