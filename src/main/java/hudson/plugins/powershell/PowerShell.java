@@ -15,8 +15,17 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * @author Kohsuke Kawaguchi
  */
 public class PowerShell extends CommandInterpreter {
+    
+    /** boolean switch setting -NoProfile */
+    public boolean useProfile;
+    
+    /**
+    * @param command 
+    * @param useProfile whether to use profile or set -NoProfile
+    */
     @DataBoundConstructor
-    public PowerShell(String command) {
+    public PowerShell(String command, boolean useProfile) {
+        this.useProfile = useProfile;
         super(command);
     }
 
@@ -26,7 +35,11 @@ public class PowerShell extends CommandInterpreter {
 
     public String[] buildCommandLine(FilePath script) {
         if (isRunningOnWindows(script)) {
-            return new String[] { "powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "& \'" + script.getRemote() + "\'"};
+            if (useProfile){
+                return new String[] { "powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "& \'" + script.getRemote() + "\'"};
+            } else {
+                return new String[] { "powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "& \'" + script.getRemote() + "\'"};
+            }
         } else {
             // ExecutionPolicy option does not work (and is not required) for non-Windows platforms
             // See https://github.com/PowerShell/PowerShell/issues/2742

@@ -26,4 +26,7 @@ THE SOFTWARE.
   <f:entry title="${%Command}" description="${%description(rootURL)}">
     <f:textarea name="command" value="${instance.command}" class="fixed-width" />
   </f:entry>
+   <f:entry field="useProfile" title="">
+    <f:checkbox title="${%Use PowerShell profile}" default="true" />
+  </f:entry>
 </j:jelly>
