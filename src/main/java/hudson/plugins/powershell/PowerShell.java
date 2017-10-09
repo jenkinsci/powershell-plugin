@@ -15,27 +15,45 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * @author Kohsuke Kawaguchi
  */
 public class PowerShell extends CommandInterpreter {
+
+    boolean stopOnError;
+
     @DataBoundConstructor
-    public PowerShell(String command) {
+    public PowerShell(String command, boolean stopOnError) {
         super(command);
+        this.stopOnError = stopOnError;
+    }
+
+    public boolean isStopOnError() {
+        return stopOnError;
     }
 
     protected String getFileExtension() {
         return ".ps1";
     }
-
+    
     public String[] buildCommandLine(FilePath script) {
         if (isRunningOnWindows(script)) {
             return new String[] { "powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "& \'" + script.getRemote() + "\'"};
         } else {
             // ExecutionPolicy option does not work (and is not required) for non-Windows platforms
             // See https://github.com/PowerShell/PowerShell/issues/2742
-            return new String[] { "powershell", "-NonInteractive", "& \'" + script.getRemote() + "\'"};
+            return new String[] { "powershell", "-NonInteractive", "-File", script.getRemote()};
         }
     }
 
     protected String getContents() {
-        return command + "\r\nexit $LastExitCode";
+        StringBuilder sb = new StringBuilder();
+        if (stopOnError) {
+            sb.append("$ErrorActionPreference=\"Stop\"");
+        } else {
+            sb.append("$ErrorActionPreference=\"Continue\"");
+        }
+        sb.append(System.lineSeparator());
+        sb.append(command);
+        sb.append(System.lineSeparator());
+        sb.append("exit $LastExitCode");
+        return sb.toString();
     }
 
     private boolean isRunningOnWindows(FilePath script) {
