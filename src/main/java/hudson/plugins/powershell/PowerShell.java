@@ -31,7 +31,7 @@ public class PowerShell extends CommandInterpreter {
     protected String getFileExtension() {
         return ".ps1";
     }
-    
+
     public String[] buildCommandLine(FilePath script) {
         if (isRunningOnWindows(script)) {
             return new String[] { "powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "& \'" + script.getRemote() + "\'"};
