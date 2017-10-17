@@ -34,6 +34,7 @@ public class PowerShell extends CommandInterpreter {
 
     public String[] buildCommandLine(FilePath script) {
         if (isRunningOnWindows(script)) {
+            // Using '& scriptname' instead of '-File scriptname' to support older versions of powershell.
             return new String[] { "powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "& \'" + script.getRemote() + "\'"};
         } else {
             // ExecutionPolicy option does not work (and is not required) for non-Windows platforms
