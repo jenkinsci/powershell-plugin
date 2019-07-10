@@ -5,7 +5,8 @@
   The text you enter in the text box will be executed as a PowerShell file, and a build
   will be considered a failure if at the end of the execution $LastExitCode is not 0.
 
-  By default PowerShell uses profile(s) which can be disabled to avoid any potential conflict and provide a clean shell.
+  By default, PowerShell processes profiles scripts at startup. 
+  This can be disabled to improve startup time, avoid any potential conflict and provide a clean shell.
   
   <p>
     If you already have a batch file in SCM, you can just type in the path of that PowerShell file

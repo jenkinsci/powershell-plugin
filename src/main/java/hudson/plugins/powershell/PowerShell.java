@@ -43,7 +43,11 @@ public class PowerShell extends CommandInterpreter {
         } else {
             // ExecutionPolicy option does not work (and is not required) for non-Windows platforms
             // See https://github.com/PowerShell/PowerShell/issues/2742
-            return new String[] { "pwsh", "-NonInteractive", "& \'" + script.getRemote() + "\'"};
+            if (useProfile){
+                return new String[] { "pwsh", "-NonInteractive", "& \'" + script.getRemote() + "\'"};
+            } else {
+                return new String[] { "pwsh", "-NonInteractive", "-NoProfile", "& \'" + script.getRemote() + "\'"};
+            }
         }
     }
 
