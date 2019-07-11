@@ -10,7 +10,7 @@ import org.apache.commons.lang.SystemUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
- * Invokes Windows PowerShell from Jenkins.
+ * Invokes PowerShell from Jenkins.
  * 
  * @author Kohsuke Kawaguchi
  */
@@ -36,17 +36,17 @@ public class PowerShell extends CommandInterpreter {
     public String[] buildCommandLine(FilePath script) {
         if (isRunningOnWindows(script)) {
             if (useProfile){
-                return new String[] { "powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "& \'" + script.getRemote() + "\'"};
+                return new String[] { "powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", "\'" + script.getRemote() + "\'"};
             } else {
-                return new String[] { "powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "& \'" + script.getRemote() + "\'"};
+                return new String[] { "powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", "\'" + script.getRemote() + "\'"};
             }
         } else {
             // ExecutionPolicy option does not work (and is not required) for non-Windows platforms
             // See https://github.com/PowerShell/PowerShell/issues/2742
             if (useProfile){
-                return new String[] { "pwsh", "-NonInteractive", "& \'" + script.getRemote() + "\'"};
+                return new String[] { "pwsh", "-NonInteractive", "-File", script.getRemote()};
             } else {
-                return new String[] { "pwsh", "-NonInteractive", "-NoProfile", "& \'" + script.getRemote() + "\'"};
+                return new String[] { "pwsh", "-NonInteractive", "-NoProfile", "-File", script.getRemote()};
             }
         }
     }
@@ -80,7 +80,7 @@ public class PowerShell extends CommandInterpreter {
         }
 
         public String getDisplayName() {
-            return "Windows PowerShell";
+            return "PowerShell";
         }
     }
 }
