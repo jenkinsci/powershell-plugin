@@ -36,9 +36,9 @@ public class PowerShell extends CommandInterpreter {
     public String[] buildCommandLine(FilePath script) {
         if (isRunningOnWindows(script)) {
             if (useProfile){
-                return new String[] { "powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", "\'" + script.getRemote() + "\'"};
+                return new String[] { "powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
             } else {
-                return new String[] { "powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", "\'" + script.getRemote() + "\'"};
+                return new String[] { "powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
             }
         } else {
             // ExecutionPolicy option does not work (and is not required) for non-Windows platforms
