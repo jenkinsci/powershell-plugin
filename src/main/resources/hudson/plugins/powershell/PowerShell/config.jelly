@@ -26,4 +26,9 @@ THE SOFTWARE.
   <f:entry title="${%Command}" description="${%description(rootURL)}">
     <f:textarea name="command" value="${instance.command}" class="fixed-width" />
   </f:entry>
+  
+  <f:entry field="stopOnError" title="Stop On Errors" description="Stops script when some step fails. Similar to Shell set -e. Translates to $ErrorActionPreference Stop or Continue">
+       <f:checkbox name="stopOnError" checked="${instance.stopOnError}" default="true" />
+  </f:entry>
+  
 </j:jelly>

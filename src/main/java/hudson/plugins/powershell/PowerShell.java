@@ -15,9 +15,17 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * @author Kohsuke Kawaguchi
  */
 public class PowerShell extends CommandInterpreter {
+
+    boolean stopOnError;
+
     @DataBoundConstructor
-    public PowerShell(String command) {
+    public PowerShell(String command, boolean stopOnError) {
         super(command);
+        this.stopOnError = stopOnError;
+    }
+
+    public boolean isStopOnError() {
+        return stopOnError;
     }
 
     protected String getFileExtension() {
@@ -35,7 +43,17 @@ public class PowerShell extends CommandInterpreter {
     }
 
     protected String getContents() {
-        return command + "\r\nexit $LastExitCode";
+        StringBuilder sb = new StringBuilder();
+        if (stopOnError) {
+            sb.append("$ErrorActionPreference=\"Stop\"");
+        } else {
+            sb.append("$ErrorActionPreference=\"Continue\"");
+        }
+        sb.append(System.lineSeparator());
+        sb.append(command);
+        sb.append(System.lineSeparator());
+        sb.append("exit $LastExitCode");
+        return sb.toString();
     }
 
     private boolean isRunningOnWindows(FilePath script) {

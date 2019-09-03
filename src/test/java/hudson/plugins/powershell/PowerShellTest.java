@@ -9,7 +9,7 @@ import hudson.model.FreeStyleProject;
 public class PowerShellTest extends HudsonTestCase {
     public void testConfigRoundtrip() throws Exception {
         FreeStyleProject p = createFreeStyleProject();
-        PowerShell orig = new PowerShell("script");
+        PowerShell orig = new PowerShell("script", true);
         p.getBuildersList().add(orig);
         submit(new WebClient().getPage(p,"configure").getFormByName("config"));
 
