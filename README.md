@@ -8,4 +8,47 @@ Jenkins PowerShell Plugin
 
 Provides Jenkins integration with [Windows PowerShell](http://www.microsoft.com/powershell)
 
-See [PowerShell Plugin](https://wiki.jenkins-ci.org/display/JENKINS/PowerShell+Plugin) on the Jenkins Wiki for more information.
+Integrates with Windows PowerShell by allowing you to directly write
+PowerShell scripts into the text box in Jenkins. Other than that, this
+plugin works pretty much like the standard shell script support.
+
+## Example
+
+![ScreenShot](usage_example.png?raw=true)
+
+## FAQ
+
+- Does this plugin support pipelines?
+- No, but there is a _powershell_ step provided by the [Pipeline: Nodes and Processes](https://github.com/jenkinsci/workflow-durable-task-step-plugin) plugin
+  
+
+# Changelog
+
+### Next Version
+
+- Support for Linux PowerShell
+- Add $ErrorActionPreference = "Stop" to the top of each script before executing ([JENKINS-36002](https://issues.jenkins-ci.org/browse/JENKINS-36002))
+- Required Jenkins version:  [2.138.4](https://jenkins.io/changelog-stable/)
+
+### Version 1.3 (Sept 18 2015)
+
+-   PowerShell now runs in Non-Interactive mode to prevent interactive
+    prompts from hanging the build
+-   PowerShell now runs with ExecutionPolicy set to "Bypass" to avoid
+    execution policy issues
+-   Scripts now exit with $LastExitCode, causing non-zero exit codes to
+    mark a build as failed
+-   Added help and list of available environment variables (including
+    English and French translations)
+
+### Version 1.2 (Aug 5 2009)
+
+-   Fixed a quotation problem.
+
+### Version 1.1 (July 1 2009)
+
+-   Fixed a bug in the launch of PowerShell
+
+### Version 1.0 (June 16 2009)
+
+-   Initial version

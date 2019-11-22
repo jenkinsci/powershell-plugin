@@ -11,7 +11,7 @@
   <packaging>hpi</packaging>
   
   <name>Jenkins PowerShell plugin</name>
-  <url>https://wiki.jenkins-ci.org/display/JENKINS/PowerShell+Plugin</url>
+  <url>https://github.com/jenkinsci/powershell-plugin</url>
   
   <developers>
     <developer>
@@ -23,6 +23,11 @@
       <id>chrisalbrecht</id>
       <name>Chris Albrecht</name>
       <email>chris.albrecht+jenkins@gmail.com</email>
+    </developer>
+    <developer>
+      <id>froque</id>
+      <name>Filipe Roque</name>
+      <email>froque@premium-minds.com</email>
     </developer>
   </developers>
   
