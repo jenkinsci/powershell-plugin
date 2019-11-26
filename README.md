@@ -6,9 +6,9 @@ Jenkins PowerShell Plugin
 [![Build Status](https://ci.jenkins.io/buildStatus/icon?job=Plugins/powershell-plugin/master)](https://ci.jenkins.io/blue/organizations/jenkins/Plugins%2Fpowershell-plugin/branches)
 [![javadoc](https://img.shields.io/badge/javadoc-available-brightgreen.svg)](https://javadoc.jenkins.io/plugin/powershell/)
 
-Provides Jenkins integration with [Windows PowerShell](http://www.microsoft.com/powershell)
+Provides Jenkins integration with [PowerShell](http://www.microsoft.com/powershell)
 
-Integrates with Windows PowerShell by allowing you to directly write
+Integrates with PowerShell by allowing you to directly write
 PowerShell scripts into the text box in Jenkins. Other than that, this
 plugin works pretty much like the standard shell script support.
 

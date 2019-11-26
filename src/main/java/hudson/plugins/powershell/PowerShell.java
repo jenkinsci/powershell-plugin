@@ -10,7 +10,7 @@ import org.apache.commons.lang.SystemUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
- * Invokes Windows PowerShell from Jenkins.
+ * Invokes PowerShell from Jenkins.
  * 
  * @author Kohsuke Kawaguchi
  */
@@ -81,7 +81,7 @@ public class PowerShell extends CommandInterpreter {
         }
 
         public String getDisplayName() {
-            return "Windows PowerShell";
+            return "PowerShell";
         }
     }
 }
