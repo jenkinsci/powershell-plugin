@@ -16,16 +16,24 @@ import org.kohsuke.stapler.DataBoundConstructor;
  */
 public class PowerShell extends CommandInterpreter {
 
-    boolean stopOnError;
+    /** boolean switch setting -NoProfile */
+    private final boolean useProfile;
+
+    private final boolean stopOnError;
 
     @DataBoundConstructor
-    public PowerShell(String command, boolean stopOnError) {
+    public PowerShell(String command, boolean stopOnError, boolean useProfile) {
         super(command);
         this.stopOnError = stopOnError;
+        this.useProfile = useProfile;
     }
 
     public boolean isStopOnError() {
         return stopOnError;
+    }
+
+    public boolean isUseProfile() {
+        return useProfile;
     }
 
     protected String getFileExtension() {
@@ -34,11 +42,19 @@ public class PowerShell extends CommandInterpreter {
 
     public String[] buildCommandLine(FilePath script) {
         if (isRunningOnWindows(script)) {
-            return new String[] { "powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File" , script.getRemote()};
+            if (useProfile){
+                return new String[] { "powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
+            } else {
+                return new String[] { "powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
+            }
         } else {
             // ExecutionPolicy option does not work (and is not required) for non-Windows platforms
             // See https://github.com/PowerShell/PowerShell/issues/2742
-            return new String[] { "pwsh", "-NonInteractive", "-File" , script.getRemote()};
+            if (useProfile){
+                return new String[] { "pwsh", "-NonInteractive", "-File", script.getRemote()};
+            } else {
+                return new String[] { "pwsh", "-NonInteractive", "-NoProfile", "-File", script.getRemote()};
+            }
         }
     }
 
