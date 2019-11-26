@@ -30,6 +30,7 @@ plugin works pretty much like the standard shell script support.
 - Add $ErrorActionPreference = "Stop" to the top of each script before executing ([JENKINS-36002](https://issues.jenkins-ci.org/browse/JENKINS-36002))
 - Required Jenkins version:  [2.138.4](https://jenkins.io/changelog-stable/)
 - Added codemirror mode text/x-csharp for command syntax highlighting
+- Support -NoProfile via checkbox
 
 ### Version 1.3 (Sept 18 2015)
 

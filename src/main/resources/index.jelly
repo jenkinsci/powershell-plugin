@@ -1,4 +1,5 @@
 <?jelly escape-by-default='true'?>
 <div>
   This plugin allows Jenkins to invoke <a href="https://en.wikipedia.org/wiki/PowerShell">PowerShell</a> as build scripts.
+  It uses PowerShell.exe on Windows and pwsh on Linux.
 </div>

@@ -28,7 +28,7 @@ public class PowerShellTest {
     @Test
     public void testConfigRoundtrip() throws Exception {
         FreeStyleProject p = r.createFreeStyleProject();
-        PowerShell orig = new PowerShell("script", true);
+        PowerShell orig = new PowerShell("script", true, true);
         p.getBuildersList().add(orig);
 
         JenkinsRule.WebClient webClient = r.createWebClient();
@@ -44,7 +44,7 @@ public class PowerShellTest {
         Assume.assumeTrue(isPowerShellAvailable());
 
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("echo 'Hello World!'", true));
+        project1.getBuildersList().add(new PowerShell("echo 'Hello World!'", true, true));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
@@ -56,7 +56,7 @@ public class PowerShellTest {
     public void testBuildBadCommandFails() throws Exception {
         Assume.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("wrong command", true));
+        project1.getBuildersList().add(new PowerShell("wrong command", true, true));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
@@ -68,7 +68,7 @@ public class PowerShellTest {
     public void testBuildBadCommandsSucceeds() throws Exception {
         Assume.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("wrong command", false));
+        project1.getBuildersList().add(new PowerShell("wrong command", false, true));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
