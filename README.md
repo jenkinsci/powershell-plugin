@@ -24,7 +24,7 @@ plugin works pretty much like the standard shell script support.
 
 # Changelog
 
-### Next Version
+### Version 1.4 (Dec 4 2019)
 
 - Support for Linux PowerShell
 - Add $ErrorActionPreference = "Stop" to the top of each script before executing ([JENKINS-36002](https://issues.jenkins-ci.org/browse/JENKINS-36002))
