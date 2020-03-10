@@ -24,7 +24,9 @@ plugin works pretty much like the standard shell script support.
 
 # Changelog
 
-### Version 1.4 (Dec 4 2019)
+### [Unreleased]
+
+### [Version 1.4] (Dec 4 2019)
 
 - Support for Linux PowerShell
 - Add $ErrorActionPreference = "Stop" to the top of each script before executing ([JENKINS-36002](https://issues.jenkins-ci.org/browse/JENKINS-36002))
@@ -32,7 +34,7 @@ plugin works pretty much like the standard shell script support.
 - Added codemirror mode text/x-csharp for command syntax highlighting
 - Support -NoProfile via checkbox
 
-### Version 1.3 (Sept 18 2015)
+### [Version 1.3] (Sept 18 2015)
 
 -   PowerShell now runs in Non-Interactive mode to prevent interactive
     prompts from hanging the build
@@ -43,14 +45,21 @@ plugin works pretty much like the standard shell script support.
 -   Added help and list of available environment variables (including
     English and French translations)
 
-### Version 1.2 (Aug 5 2009)
+### [Version 1.2] (Aug 5 2009)
 
 -   Fixed a quotation problem.
 
-### Version 1.1 (July 1 2009)
+### [Version 1.1] (July 1 2009)
 
 -   Fixed a bug in the launch of PowerShell
 
 ### Version 1.0 (June 16 2009)
 
 -   Initial version
+
+[Unreleased]: https://github.com/jenkinsci/powershell-plugin/compare/plugin-usage-plugin-1.4...HEAD
+[Version 1.4]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.3...powershell-1.4
+[Version 1.3]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.2...powershell-1.3
+[Version 1.2]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.1...powershell-1.2
+[Version 1.1]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.0...powershell-1.1
+[Version 1.0]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.0...powershell-1.0
