@@ -8,8 +8,10 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.tasks.CommandInterpreter;
 import jenkins.model.Jenkins;
+import javax.annotation.CheckForNull;
 import org.apache.commons.lang.SystemUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 import java.io.IOException;
 
@@ -23,15 +25,18 @@ public class PowerShell extends CommandInterpreter {
     /** boolean switch setting -NoProfile */
     private final boolean useProfile;
 
+    private Integer unstableReturn;
+
     private final boolean stopOnError;
 
     private transient TaskListener listener;
 
     @DataBoundConstructor
-    public PowerShell(String command, boolean stopOnError, boolean useProfile) {
+    public PowerShell(String command, boolean stopOnError, boolean useProfile, Integer unstableReturn) {
         super(command);
         this.stopOnError = stopOnError;
         this.useProfile = useProfile;
+        this.unstableReturn = unstableReturn;
     }
 
     @Override
@@ -61,7 +66,21 @@ public class PowerShell extends CommandInterpreter {
         return ".ps1";
     }
 
+    @CheckForNull
+    public final Integer getUnstableReturn() {
+        return Integer.valueOf(0).equals(unstableReturn) ? null : unstableReturn;
+    }
+
+    @DataBoundSetter
+    public void setUnstableReturn(Integer unstableReturn) {
+        this.unstableReturn = unstableReturn;
+    }
+
     @Override
+    protected boolean isErrorlevelForUnstableBuild(int exitCode) {
+        return this.unstableReturn != null && exitCode != 0 && this.unstableReturn.equals(exitCode);
+    }
+
     public String[] buildCommandLine(FilePath script) {
         String powerShellExecutable = null;
         PowerShellInstallation installation = null;
@@ -158,7 +177,7 @@ public class PowerShell extends CommandInterpreter {
         public String getHelpFile() {
             return "/plugin/powershell/help.html";
         }
-        
+
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
             return true;
