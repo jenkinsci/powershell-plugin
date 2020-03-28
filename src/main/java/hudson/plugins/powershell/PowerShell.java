@@ -6,8 +6,11 @@ import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.tasks.CommandInterpreter;
+import javax.annotation.CheckForNull;
 import org.apache.commons.lang.SystemUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 /**
  * Invokes PowerShell from Jenkins.
@@ -19,13 +22,16 @@ public class PowerShell extends CommandInterpreter {
     /** boolean switch setting -NoProfile */
     private final boolean useProfile;
 
+    private Integer unstableReturn;
+
     private final boolean stopOnError;
 
     @DataBoundConstructor
-    public PowerShell(String command, boolean stopOnError, boolean useProfile) {
+    public PowerShell(String command, boolean stopOnError, boolean useProfile, Integer unstableReturn) {
         super(command);
         this.stopOnError = stopOnError;
         this.useProfile = useProfile;
+        this.unstableReturn = unstableReturn;
     }
 
     public boolean isStopOnError() {
@@ -38,6 +44,21 @@ public class PowerShell extends CommandInterpreter {
 
     protected String getFileExtension() {
         return ".ps1";
+    }
+
+    @CheckForNull
+    public final Integer getUnstableReturn() {
+        return Integer.valueOf(0).equals(unstableReturn) ? null : unstableReturn;
+    }
+
+    @DataBoundSetter
+    public void setUnstableReturn(Integer unstableReturn) {
+        this.unstableReturn = unstableReturn;
+    }
+
+    @Override
+    protected boolean isErrorlevelForUnstableBuild(int exitCode) {
+        return this.unstableReturn != null && exitCode != 0 && this.unstableReturn.equals(exitCode);
     }
 
     public String[] buildCommandLine(FilePath script) {
@@ -85,7 +106,7 @@ public class PowerShell extends CommandInterpreter {
         return path.length() > 3 && path.charAt(1) == ':' && path.charAt(2) == '\\';
     }
 
-    @Extension
+    @Extension @Symbol("powerShell")
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
         @Override
         public String getHelpFile() {
