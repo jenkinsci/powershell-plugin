@@ -20,12 +20,15 @@ public class PowerShell extends CommandInterpreter {
     private final boolean useProfile;
 
     private final boolean stopOnError;
+    
+    private final String powerShellVersionPreference;
 
     @DataBoundConstructor
-    public PowerShell(String command, boolean stopOnError, boolean useProfile) {
+    public PowerShell(String command, boolean stopOnError, boolean useProfile, String powerShellVersionPreference) {
         super(command);
         this.stopOnError = stopOnError;
         this.useProfile = useProfile;
+        this.powerShellVersionPreference = powerShellVersionPreference == null ? "osBased" : powerShellVersionPreference;
     }
 
     public boolean isStopOnError() {
@@ -35,26 +38,53 @@ public class PowerShell extends CommandInterpreter {
     public boolean isUseProfile() {
         return useProfile;
     }
-
+    
+    public String getPowerShellVersionPreference() {
+        return powerShellVersionPreference;
+    }
+    
     protected String getFileExtension() {
         return ".ps1";
     }
 
     public String[] buildCommandLine(FilePath script) {
-        if (isRunningOnWindows(script)) {
-            if (useProfile){
-                return new String[] { "powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
-            } else {
-                return new String[] { "powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
+        System.out.println(powerShellVersionPreference);
+
+        switch (powerShellVersionPreference) {
+            case "windowsPowerShell":
+                if (useProfile) {
+                    return new String[]{"powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
+                } else {
+                    return new String[]{"powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-NoProfile", "-File", script.getRemote()};
+                }
+
+            case "powershellCore": {
+                // ExecutionPolicy option does not work (and is not required) for non-Windows platforms
+                // See https://github.com/PowerShell/PowerShell/issues/2742
+                if (useProfile) {
+                    return new String[]{"pwsh", "-NonInteractive", "-File", script.getRemote()};
+                } else {
+                    return new String[]{"pwsh", "-NonInteractive", "-NoProfile", "-File", script.getRemote()};
+                }
             }
-        } else {
-            // ExecutionPolicy option does not work (and is not required) for non-Windows platforms
-            // See https://github.com/PowerShell/PowerShell/issues/2742
-            if (useProfile){
-                return new String[] { "pwsh", "-NonInteractive", "-File", script.getRemote()};
-            } else {
-                return new String[] { "pwsh", "-NonInteractive", "-NoProfile", "-File", script.getRemote()};
-            }
+
+            case "osBased":
+            default:
+                if (isRunningOnWindows(script)) {
+                    if (useProfile) {
+                        return new String[]{"powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
+                    } else {
+                        return new String[]{"powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-NoProfile", "-File", script.getRemote()};
+                    }
+                } else {
+                    // ExecutionPolicy option does not work (and is not required) for non-Windows platforms
+                    // See https://github.com/PowerShell/PowerShell/issues/2742
+                    if (useProfile) {
+                        return new String[]{"pwsh", "-NonInteractive", "-File", script.getRemote()};
+                    } else {
+                        return new String[]{"pwsh", "-NonInteractive", "-NoProfile", "-File", script.getRemote()};
+                    }
+                }
         }
     }
 

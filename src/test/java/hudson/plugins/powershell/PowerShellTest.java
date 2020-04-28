@@ -2,6 +2,7 @@ package hudson.plugins.powershell;
 
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import hudson.FilePath;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.Result;
@@ -16,6 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import org.junit.Assert;
+import org.apache.commons.lang.SystemUtils;
 
 /**
  * @author Kohsuke Kawaguchi
@@ -28,7 +31,7 @@ public class PowerShellTest {
     @Test
     public void testConfigRoundtrip() throws Exception {
         FreeStyleProject p = r.createFreeStyleProject();
-        PowerShell orig = new PowerShell("script", true, true);
+        PowerShell orig = new PowerShell("script", true, true, null);
         p.getBuildersList().add(orig);
 
         JenkinsRule.WebClient webClient = r.createWebClient();
@@ -44,7 +47,7 @@ public class PowerShellTest {
         Assume.assumeTrue(isPowerShellAvailable());
 
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("echo 'Hello World!'", true, true));
+        project1.getBuildersList().add(new PowerShell("echo 'Hello World!'", true, true, null));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
@@ -56,7 +59,7 @@ public class PowerShellTest {
     public void testBuildBadCommandFails() throws Exception {
         Assume.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("wrong command", true, true));
+        project1.getBuildersList().add(new PowerShell("wrong command", true, true, null));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
@@ -68,14 +71,53 @@ public class PowerShellTest {
     public void testBuildBadCommandsSucceeds() throws Exception {
         Assume.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("wrong command", false, true));
+        project1.getBuildersList().add(new PowerShell("wrong command", false, true, null));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
-
+        
         r.assertBuildStatus(Result.SUCCESS, build);
     }
 
+    /**
+     * Tests to ensure the correct executable is used
+     * Requires tests to be run on Windows and Linux due to {@link PowerShell#isRunningOnWindows(hudson.FilePath)} local vs remote detection
+     * @throws Exception 
+     */
+    @Test
+    public void testBuildCommandLineOSBased() throws Exception {
+        PowerShell powershell = new PowerShell("echo 'Hello World!'", true, true, "osBased");
+        
+        String lineSeperator = System.lineSeparator();
+
+        String[] cmdLine = powershell.buildCommandLine(new FilePath(new File(System.lineSeparator() + "Test" + System.lineSeparator() + "fake.ps1")));        
+        if(SystemUtils.IS_OS_WINDOWS) {
+            Assert.assertEquals("powershell.exe", cmdLine[0]);
+        } else {
+            Assert.assertEquals("pwsh", cmdLine[0]);
+        }
+    }
+    
+    @Test
+    public void testBuildCommandLineWindowsPowerShell() throws Exception {
+        PowerShell powershell = new PowerShell("echo 'Hello World!'", true, true, "windowsPowerShell");
+        
+        String lineSeperator = System.lineSeparator();
+
+        String[] cmdLine = powershell.buildCommandLine(new FilePath(new File(System.lineSeparator() + "Test" + System.lineSeparator() + "fake.ps1")));        
+        Assert.assertEquals("powershell.exe", cmdLine[0]);
+    }
+    
+    @Test
+    public void testBuildCommandLinePowerShellCore() throws Exception {
+        PowerShell powershell = new PowerShell("echo 'Hello World!'", true, true, "powershellCore");
+        
+        String lineSeperator = System.lineSeparator();
+
+        String[] cmdLine = powershell.buildCommandLine(new FilePath(new File(System.lineSeparator() + "Test" + System.lineSeparator() + "fake.ps1")));        
+        Assert.assertEquals("pwsh", cmdLine[0]);
+    }
+    
     private boolean isPowerShellAvailable() {
         return Stream.of(System.getenv("PATH").split(Pattern.quote(File.pathSeparator)))
                 .map(Paths::get)
