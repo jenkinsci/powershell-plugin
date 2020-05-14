@@ -23,12 +23,20 @@ public class PowerShell extends CommandInterpreter {
     
     private final String powerShellVersionPreference;
 
+    @Deprecated
+    public PowerShell(String command, boolean stopOnError, boolean useProfile) {
+        super(command);
+        this.stopOnError = stopOnError;
+        this.useProfile = useProfile;
+        this.powerShellVersionPreference = "osBased";
+    }
+
     @DataBoundConstructor
     public PowerShell(String command, boolean stopOnError, boolean useProfile, String powerShellVersionPreference) {
         super(command);
         this.stopOnError = stopOnError;
         this.useProfile = useProfile;
-        this.powerShellVersionPreference = powerShellVersionPreference == null ? "osBased" : powerShellVersionPreference;
+        this.powerShellVersionPreference = powerShellVersionPreference;
     }
 
     public boolean isStopOnError() {
@@ -42,15 +50,13 @@ public class PowerShell extends CommandInterpreter {
     public String getPowerShellVersionPreference() {
         return powerShellVersionPreference;
     }
-    
+
     protected String getFileExtension() {
         return ".ps1";
     }
 
     public String[] buildCommandLine(FilePath script) {
-        System.out.println(powerShellVersionPreference);
-
-        switch (powerShellVersionPreference) {
+        switch (powerShellVersionPreference == null ? "osBased" : powerShellVersionPreference) {
             case "windowsPowerShell":
                 if (useProfile) {
                     return new String[]{"powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
