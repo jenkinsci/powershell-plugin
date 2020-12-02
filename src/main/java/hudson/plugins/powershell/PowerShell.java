@@ -6,8 +6,10 @@ import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.tasks.CommandInterpreter;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.SystemUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * Invokes PowerShell from Jenkins.
@@ -41,19 +43,28 @@ public class PowerShell extends CommandInterpreter {
     }
 
     public String[] buildCommandLine(FilePath script) {
+        DescriptorImpl descriptor = (DescriptorImpl) getDescriptor();
+        boolean prioritizePowerShellCore = false;
+        if (descriptor.getPowerShellVersionPreference().equals("powershellCore"))
+        {
+            prioritizePowerShellCore = true;
+        }
+
+        PowerShellInstallation tool = new PowerShellInstallation("DEFAULT", "DEFAULT");
+        String powerShellExecutable = tool.getPowershell(isRunningOnWindows(script), prioritizePowerShellCore);
         if (isRunningOnWindows(script)) {
             if (useProfile){
-                return new String[] { "powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
+                return new String[] { powerShellExecutable, "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
             } else {
-                return new String[] { "powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
+                return new String[] { powerShellExecutable, "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
             }
         } else {
             // ExecutionPolicy option does not work (and is not required) for non-Windows platforms
             // See https://github.com/PowerShell/PowerShell/issues/2742
             if (useProfile){
-                return new String[] { "pwsh", "-NonInteractive", "-File", script.getRemote()};
+                return new String[] { powerShellExecutable, "-NonInteractive", "-File", script.getRemote()};
             } else {
-                return new String[] { "pwsh", "-NonInteractive", "-NoProfile", "-File", script.getRemote()};
+                return new String[] { powerShellExecutable, "-NonInteractive", "-NoProfile", "-File", script.getRemote()};
             }
         }
     }
@@ -87,6 +98,15 @@ public class PowerShell extends CommandInterpreter {
 
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
+
+        private String powerShellVersionPreference;
+
+        public DescriptorImpl()
+        {
+            super();
+            load();
+        }
+
         @Override
         public String getHelpFile() {
             return "/plugin/powershell/help.html";
@@ -98,6 +118,21 @@ public class PowerShell extends CommandInterpreter {
 
         public String getDisplayName() {
             return "PowerShell";
+        }
+
+        @Override
+        public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
+            setPowerShellVersionPreference(formData.getString("powerShellVersionPreference"));
+            save();
+            return false;
+        }
+
+        public String getPowerShellVersionPreference() {
+            return powerShellVersionPreference;
+        }
+
+        public void setPowerShellVersionPreference(String powerShellVersionPreference) {
+            this.powerShellVersionPreference = powerShellVersionPreference;
         }
     }
 }
