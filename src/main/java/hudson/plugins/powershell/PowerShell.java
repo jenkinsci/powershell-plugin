@@ -2,7 +2,10 @@ package hudson.plugins.powershell;
 
 import hudson.Extension;
 import hudson.FilePath;
+import hudson.Launcher;
 import hudson.model.AbstractProject;
+import hudson.model.AbstractBuild;
+import hudson.model.BuildListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.tasks.CommandInterpreter;
@@ -23,11 +26,26 @@ public class PowerShell extends CommandInterpreter {
 
     private final boolean stopOnError;
 
+    private Launcher launcher;
+
     @DataBoundConstructor
     public PowerShell(String command, boolean stopOnError, boolean useProfile) {
         super(command);
         this.stopOnError = stopOnError;
         this.useProfile = useProfile;
+    }
+
+    public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) throws InterruptedException
+    {
+        this.launcher = launcher;
+        try
+        {
+            return super.perform(build, launcher, listener);
+        }
+        catch (InterruptedException e)
+        {
+            throw e;
+        }
     }
 
     public boolean isStopOnError() {
@@ -45,13 +63,20 @@ public class PowerShell extends CommandInterpreter {
     public String[] buildCommandLine(FilePath script) {
         DescriptorImpl descriptor = (DescriptorImpl) getDescriptor();
         boolean prioritizePowerShellCore = false;
-        if (descriptor.getPowerShellVersionPreference().equals("powershellCore"))
+        try
         {
-            prioritizePowerShellCore = true;
+            if (descriptor.getPowerShellVersionPreference().equals("powershellCore"))
+            {
+                prioritizePowerShellCore = true;
+            }
+        }
+        catch(Exception e)
+        {
+            prioritizePowerShellCore = false;
         }
 
         PowerShellInstallation tool = new PowerShellInstallation("DEFAULT", "DEFAULT");
-        String powerShellExecutable = tool.getPowershell(isRunningOnWindows(script), prioritizePowerShellCore);
+        String powerShellExecutable = tool.getPowershell(isRunningOnWindows(script), script.isRemote(), prioritizePowerShellCore, launcher);
         if (isRunningOnWindows(script)) {
             if (useProfile){
                 return new String[] { powerShellExecutable, "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
@@ -124,7 +149,7 @@ public class PowerShell extends CommandInterpreter {
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             setPowerShellVersionPreference(formData.getString("powerShellVersionPreference"));
             save();
-            return false;
+            return true;
         }
 
         public String getPowerShellVersionPreference() {
