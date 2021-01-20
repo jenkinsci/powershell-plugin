@@ -1,25 +1,33 @@
 package hudson.plugins.powershell;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import hudson.EnvVars;
-import hudson.Launcher;
+import hudson.Extension;
+import hudson.init.InitMilestone;
+import hudson.init.Initializer;
 import hudson.model.EnvironmentSpecific;
 import hudson.model.Node;
 import hudson.model.TaskListener;
-import hudson.remoting.VirtualChannel;
 import hudson.slaves.NodeSpecific;
+import hudson.tools.ToolDescriptor;
 import hudson.tools.ToolInstallation;
+import jenkins.model.Jenkins;
+import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
-import jenkins.security.MasterToSlaveCallable;
+import org.kohsuke.stapler.StaplerRequest;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
+import java.lang.reflect.Array;
 
 public class PowerShellInstallation extends ToolInstallation implements NodeSpecific<PowerShellInstallation>,
         EnvironmentSpecific<PowerShellInstallation> {
+
+    public static transient final String DEFAULTWINDOWS = "DefaultWindows";
+
+    public static transient final String DEFAULTLINUX = "DefaultLinux";
+
+
+    private static final long serialVersionUID = 1;
 
     @DataBoundConstructor
     public PowerShellInstallation(String name, String home) {
@@ -34,58 +42,76 @@ public class PowerShellInstallation extends ToolInstallation implements NodeSpec
         return new PowerShellInstallation(getName(), environment.expand(getHome()));
     }
 
-    public String getPowershell(Boolean isRunningOnWindows, Boolean isRemote, Boolean prioritizePowerShellCore, Launcher launcher) {
-        if (isRunningOnWindows && prioritizePowerShellCore && isPowerShellVersionAvailable("pwsh.exe", isRemote, launcher))
-        {
-            return "pwsh.exe";
-        }
-        else if (isRunningOnWindows)
-        {
+    public static String getDefaultPowershellWhenNoConfiguration(Boolean isRunningOnWindows) {
+        if (isRunningOnWindows) {
             return "powershell.exe";
         }
-        else
-        {
+        else {
             return "pwsh";
         }
     }
 
-    private Boolean isPowerShellVersionAvailable(String powerShellVersion, Boolean isRemote, Launcher launcher)
-    {
-        if (!isRemote)
-        {
-            return Stream.of(System.getenv("PATH").split(Pattern.quote(File.pathSeparator)))
-                    .map(Paths::get)
-                    .anyMatch(path -> Files.exists(path.resolve(powerShellVersion)));
+    @Initializer(after = InitMilestone.EXTENSIONS_AUGMENTED)
+    public static void onLoaded() {
+        DescriptorImpl descriptor = (PowerShellInstallation.DescriptorImpl) Jenkins.get().getDescriptor(PowerShellInstallation.class);
+        assert descriptor != null;
+        PowerShellInstallation[] installations = descriptor.getInstallations();
+        if (installations != null && installations.length > 0) {
+            return;
         }
-        else
-        {
-            try
-            {
-                VirtualChannel channel = launcher.getChannel();
-                return (channel == null) ? false : channel.call(new PowerShellChecker(powerShellVersion));
-            }
-            catch(Exception e)
-            {
-                return false;
-            }
-        }
+        String defaultPowershell = "powershell.exe";
+        PowerShellInstallation windowsInstallation = new PowerShellInstallation(DEFAULTWINDOWS, defaultPowershell);
+        defaultPowershell = "pwsh";
+        PowerShellInstallation linuxInstallation = new PowerShellInstallation(DEFAULTLINUX, defaultPowershell);
+        PowerShellInstallation[] defaultInstallations = { windowsInstallation, linuxInstallation};
+        descriptor.setInstallations(defaultInstallations);
+        descriptor.save();
     }
 
-    private static class PowerShellChecker extends MasterToSlaveCallable<Boolean, Exception> {
+    public String getPowerShellBinary() {
+        return getHome();
+    }
 
-        private static final long serialVersionUID = 1;
+    @Extension
+    public static class DescriptorImpl extends ToolDescriptor<PowerShellInstallation>
+    {
+        public DescriptorImpl() {
+            super();
+            load();
+        }
 
-        private String powerShellVersion;
-
-        public PowerShellChecker(String powerShellVersion) {
-            this.powerShellVersion = powerShellVersion;
+        public String getDisplayName() {
+            return "PowerShell";
         }
 
         @Override
-        public Boolean call() throws Exception {
-            return Stream.of(System.getenv("PATH").split(Pattern.quote(File.pathSeparator)))
-                    .map(Paths::get)
-                    .anyMatch(path -> Files.exists(path.resolve(powerShellVersion)));
+        public boolean configure(StaplerRequest req, JSONObject json) {
+            setInstallations(req.bindJSONToList(PowerShellInstallation.class, json.get("tool"))
+                    .toArray((PowerShellInstallation[]) Array.newInstance(PowerShellInstallation.class, 0)));
+            save();
+            return true;
+        }
+
+        @Nullable
+        public PowerShellInstallation getInstallation(String name) {
+            for (PowerShellInstallation i : getInstallations()) {
+                if (i.getName().equals(name)) {
+                    return i;
+                }
+            }
+            return null;
+        }
+
+        @Nullable
+        public PowerShellInstallation getAnyInstallation(String name) {
+            PowerShellInstallation defaultInstallation = getInstallation(name);
+            if (defaultInstallation != null) {
+                return defaultInstallation;
+            }
+            else if (getInstallations().length > 0) {
+                return getInstallations()[0];
+            }
+            return null;
         }
     }
 }

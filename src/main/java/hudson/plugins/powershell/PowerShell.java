@@ -3,16 +3,15 @@ package hudson.plugins.powershell;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.AbstractProject;
-import hudson.model.AbstractBuild;
-import hudson.model.BuildListener;
+import hudson.model.*;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.tasks.CommandInterpreter;
-import net.sf.json.JSONObject;
+import jenkins.model.Jenkins;
 import org.apache.commons.lang.SystemUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.StaplerRequest;
+
+import java.io.IOException;
 
 /**
  * Invokes PowerShell from Jenkins.
@@ -26,7 +25,7 @@ public class PowerShell extends CommandInterpreter {
 
     private final boolean stopOnError;
 
-    private Launcher launcher;
+    private TaskListener listener;
 
     @DataBoundConstructor
     public PowerShell(String command, boolean stopOnError, boolean useProfile) {
@@ -37,7 +36,7 @@ public class PowerShell extends CommandInterpreter {
 
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) throws InterruptedException
     {
-        this.launcher = launcher;
+        this.listener = listener;
         try
         {
             return super.perform(build, launcher, listener);
@@ -61,22 +60,34 @@ public class PowerShell extends CommandInterpreter {
     }
 
     public String[] buildCommandLine(FilePath script) {
-        DescriptorImpl descriptor = (DescriptorImpl) getDescriptor();
-        boolean prioritizePowerShellCore = false;
-        try
-        {
-            if (descriptor.getPowerShellVersionPreference().equals("powershellCore"))
-            {
-                prioritizePowerShellCore = true;
+        String powerShellExecutable = null;
+        PowerShellInstallation installation = null;
+        if (isRunningOnWindows(script)) {
+            installation = Jenkins.get().getDescriptorByType(PowerShellInstallation.DescriptorImpl.class).getAnyInstallation(PowerShellInstallation.DEFAULTWINDOWS);
+        }
+        else {
+            installation = Jenkins.get().getDescriptorByType(PowerShellInstallation.DescriptorImpl.class).getAnyInstallation(PowerShellInstallation.DEFAULTLINUX);
+        }
+        if (installation != null) {
+            Node node = filePathToNode(script);
+            try {
+                if (node != null && installation.forNode(node, listener) != null) {
+                    powerShellExecutable = installation.forNode(node, listener).getPowerShellBinary();
+                }
+                else {
+                    powerShellExecutable = installation.getPowerShellBinary();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
-        catch(Exception e)
+        if (powerShellExecutable == null)
         {
-            prioritizePowerShellCore = false;
+            powerShellExecutable = PowerShellInstallation.getDefaultPowershellWhenNoConfiguration(isRunningOnWindows(script));
         }
 
-        PowerShellInstallation tool = new PowerShellInstallation("DEFAULT", "DEFAULT");
-        String powerShellExecutable = tool.getPowershell(isRunningOnWindows(script), script.isRemote(), prioritizePowerShellCore, launcher);
         if (isRunningOnWindows(script)) {
             if (useProfile){
                 return new String[] { powerShellExecutable, "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
@@ -121,10 +132,17 @@ public class PowerShell extends CommandInterpreter {
         return path.length() > 3 && path.charAt(1) == ':' && path.charAt(2) == '\\';
     }
 
+    private static Node filePathToNode(FilePath script) {
+        Computer computer = script.toComputer();
+        Node node = null;
+        if (computer != null) {
+            node = computer.getNode();
+        }
+        return node;
+    }
+
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
-
-        private String powerShellVersionPreference;
 
         public DescriptorImpl()
         {
@@ -143,21 +161,6 @@ public class PowerShell extends CommandInterpreter {
 
         public String getDisplayName() {
             return "PowerShell";
-        }
-
-        @Override
-        public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
-            setPowerShellVersionPreference(formData.getString("powerShellVersionPreference"));
-            save();
-            return true;
-        }
-
-        public String getPowerShellVersionPreference() {
-            return powerShellVersionPreference;
-        }
-
-        public void setPowerShellVersionPreference(String powerShellVersionPreference) {
-            this.powerShellVersionPreference = powerShellVersionPreference;
         }
     }
 }
