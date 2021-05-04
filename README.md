@@ -26,9 +26,11 @@ plugin works pretty much like the standard shell script support.
 
 ### [Unreleased]
 
+### [Version 1.5] (2021-05-04)
+
 - [Added selection of preferred PowerShell version for Windows machines](https://github.com/jenkinsci/powershell-plugin/pull/16)
 
-### [Version 1.4] (Dec 4 2019)
+### [Version 1.4] (2019-12-04)
 
 - Support for Linux PowerShell
 - Add $ErrorActionPreference = "Stop" to the top of each script before executing ([JENKINS-36002](https://issues.jenkins-ci.org/browse/JENKINS-36002))
@@ -36,7 +38,7 @@ plugin works pretty much like the standard shell script support.
 - Added codemirror mode text/x-csharp for command syntax highlighting
 - Support -NoProfile via checkbox
 
-### [Version 1.3] (Sept 18 2015)
+### [Version 1.3] (2015-09-18)
 
 -   PowerShell now runs in Non-Interactive mode to prevent interactive
     prompts from hanging the build
@@ -47,15 +49,15 @@ plugin works pretty much like the standard shell script support.
 -   Added help and list of available environment variables (including
     English and French translations)
 
-### [Version 1.2] (Aug 5 2009)
+### [Version 1.2] (2009-08-05)
 
 -   Fixed a quotation problem.
 
-### [Version 1.1] (July 1 2009)
+### [Version 1.1] (2009-07-01)
 
 -   Fixed a bug in the launch of PowerShell
 
-### Version 1.0 (June 16 2009)
+### Version 1.0 (2009-06-16)
 
 -   Initial version
 
