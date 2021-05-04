@@ -18,6 +18,7 @@ import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
+import javax.annotation.Nonnull;
 
 public class PowerShellInstallation extends ToolInstallation implements NodeSpecific<PowerShellInstallation>,
         EnvironmentSpecific<PowerShellInstallation> {
@@ -34,10 +35,12 @@ public class PowerShellInstallation extends ToolInstallation implements NodeSpec
         super(name, home, null);
     }
 
+    @Override
     public PowerShellInstallation forNode(Node node, TaskListener log) throws IOException, InterruptedException {
         return new PowerShellInstallation(getName(), translateFor(node, log));
     }
 
+    @Override
     public PowerShellInstallation forEnvironment(EnvVars environment) {
         return new PowerShellInstallation(getName(), environment.expand(getHome()));
     }
@@ -80,6 +83,8 @@ public class PowerShellInstallation extends ToolInstallation implements NodeSpec
             load();
         }
 
+        @Override
+        @Nonnull
         public String getDisplayName() {
             return "PowerShell";
         }

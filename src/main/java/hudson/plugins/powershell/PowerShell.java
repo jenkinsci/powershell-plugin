@@ -34,6 +34,7 @@ public class PowerShell extends CommandInterpreter {
         this.useProfile = useProfile;
     }
 
+    @Override
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) throws InterruptedException
     {
         this.listener = listener;
@@ -55,10 +56,12 @@ public class PowerShell extends CommandInterpreter {
         return useProfile;
     }
 
+    @Override
     protected String getFileExtension() {
         return ".ps1";
     }
 
+    @Override
     public String[] buildCommandLine(FilePath script) {
         String powerShellExecutable = null;
         PowerShellInstallation installation = null;
@@ -105,6 +108,7 @@ public class PowerShell extends CommandInterpreter {
         }
     }
 
+    @Override
     protected String getContents() {
         StringBuilder sb = new StringBuilder();
         if (stopOnError) {
@@ -155,10 +159,12 @@ public class PowerShell extends CommandInterpreter {
             return "/plugin/powershell/help.html";
         }
         
+        @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
             return true;
         }
 
+        @Override
         public String getDisplayName() {
             return "PowerShell";
         }
