@@ -26,6 +26,8 @@ plugin works pretty much like the standard shell script support.
 
 ### [Unreleased]
 
+- [Added selection of preferred PowerShell version for Windows machines](https://github.com/jenkinsci/powershell-plugin/pull/16)
+
 ### [Version 1.4] (Dec 4 2019)
 
 - Support for Linux PowerShell
