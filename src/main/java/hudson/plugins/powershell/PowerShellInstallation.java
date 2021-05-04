@@ -11,6 +11,7 @@ import hudson.model.TaskListener;
 import hudson.slaves.NodeSpecific;
 import hudson.tools.ToolDescriptor;
 import hudson.tools.ToolInstallation;
+import hudson.tools.ToolProperty;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -18,6 +19,7 @@ import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class PowerShellInstallation extends ToolInstallation implements NodeSpecific<PowerShellInstallation>,
@@ -31,18 +33,18 @@ public class PowerShellInstallation extends ToolInstallation implements NodeSpec
     private static final long serialVersionUID = 1;
 
     @DataBoundConstructor
-    public PowerShellInstallation(String name, String home) {
-        super(name, home, null);
+    public PowerShellInstallation(String name, String home, List<? extends ToolProperty<?>> properties) {
+        super(name, home, properties);
     }
 
     @Override
-    public PowerShellInstallation forNode(Node node, TaskListener log) throws IOException, InterruptedException {
-        return new PowerShellInstallation(getName(), translateFor(node, log));
+    public PowerShellInstallation forNode(@Nonnull Node node, TaskListener log) throws IOException, InterruptedException {
+        return new PowerShellInstallation(getName(), translateFor(node, log), getProperties());
     }
 
     @Override
     public PowerShellInstallation forEnvironment(EnvVars environment) {
-        return new PowerShellInstallation(getName(), environment.expand(getHome()));
+        return new PowerShellInstallation(getName(), environment.expand(getHome()), getProperties());
     }
 
     public static String getDefaultPowershellWhenNoConfiguration(Boolean isRunningOnWindows) {
@@ -62,10 +64,9 @@ public class PowerShellInstallation extends ToolInstallation implements NodeSpec
         if (installations != null && installations.length > 0) {
             return;
         }
-        String defaultPowershell = "powershell.exe";
-        PowerShellInstallation windowsInstallation = new PowerShellInstallation(DEFAULTWINDOWS, defaultPowershell);
-        defaultPowershell = "pwsh";
-        PowerShellInstallation linuxInstallation = new PowerShellInstallation(DEFAULTLINUX, defaultPowershell);
+
+        PowerShellInstallation windowsInstallation = new PowerShellInstallation(DEFAULTWINDOWS, "powershell.exe", null);
+        PowerShellInstallation linuxInstallation = new PowerShellInstallation(DEFAULTLINUX, "pwsh", null);
         PowerShellInstallation[] defaultInstallations = { windowsInstallation, linuxInstallation};
         descriptor.setInstallations(defaultInstallations);
         descriptor.save();
