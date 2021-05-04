@@ -2,12 +2,16 @@ package hudson.plugins.powershell;
 
 import hudson.Extension;
 import hudson.FilePath;
-import hudson.model.AbstractProject;
+import hudson.Launcher;
+import hudson.model.*;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.tasks.CommandInterpreter;
+import jenkins.model.Jenkins;
 import org.apache.commons.lang.SystemUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
+
+import java.io.IOException;
 
 /**
  * Invokes PowerShell from Jenkins.
@@ -21,11 +25,26 @@ public class PowerShell extends CommandInterpreter {
 
     private final boolean stopOnError;
 
+    private TaskListener listener;
+
     @DataBoundConstructor
     public PowerShell(String command, boolean stopOnError, boolean useProfile) {
         super(command);
         this.stopOnError = stopOnError;
         this.useProfile = useProfile;
+    }
+
+    public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) throws InterruptedException
+    {
+        this.listener = listener;
+        try
+        {
+            return super.perform(build, launcher, listener);
+        }
+        catch (InterruptedException e)
+        {
+            throw e;
+        }
     }
 
     public boolean isStopOnError() {
@@ -41,19 +60,47 @@ public class PowerShell extends CommandInterpreter {
     }
 
     public String[] buildCommandLine(FilePath script) {
+        String powerShellExecutable = null;
+        PowerShellInstallation installation = null;
+        if (isRunningOnWindows(script)) {
+            installation = Jenkins.get().getDescriptorByType(PowerShellInstallation.DescriptorImpl.class).getAnyInstallation(PowerShellInstallation.DEFAULTWINDOWS);
+        }
+        else {
+            installation = Jenkins.get().getDescriptorByType(PowerShellInstallation.DescriptorImpl.class).getAnyInstallation(PowerShellInstallation.DEFAULTLINUX);
+        }
+        if (installation != null) {
+            Node node = filePathToNode(script);
+            try {
+                if (node != null && installation.forNode(node, listener) != null) {
+                    powerShellExecutable = installation.forNode(node, listener).getPowerShellBinary();
+                }
+                else {
+                    powerShellExecutable = installation.getPowerShellBinary();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if (powerShellExecutable == null)
+        {
+            powerShellExecutable = PowerShellInstallation.getDefaultPowershellWhenNoConfiguration(isRunningOnWindows(script));
+        }
+
         if (isRunningOnWindows(script)) {
             if (useProfile){
-                return new String[] { "powershell.exe", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
+                return new String[] { powerShellExecutable, "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
             } else {
-                return new String[] { "powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
+                return new String[] { powerShellExecutable, "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script.getRemote()};
             }
         } else {
             // ExecutionPolicy option does not work (and is not required) for non-Windows platforms
             // See https://github.com/PowerShell/PowerShell/issues/2742
             if (useProfile){
-                return new String[] { "pwsh", "-NonInteractive", "-File", script.getRemote()};
+                return new String[] { powerShellExecutable, "-NonInteractive", "-File", script.getRemote()};
             } else {
-                return new String[] { "pwsh", "-NonInteractive", "-NoProfile", "-File", script.getRemote()};
+                return new String[] { powerShellExecutable, "-NonInteractive", "-NoProfile", "-File", script.getRemote()};
             }
         }
     }
@@ -85,8 +132,24 @@ public class PowerShell extends CommandInterpreter {
         return path.length() > 3 && path.charAt(1) == ':' && path.charAt(2) == '\\';
     }
 
+    private static Node filePathToNode(FilePath script) {
+        Computer computer = script.toComputer();
+        Node node = null;
+        if (computer != null) {
+            node = computer.getNode();
+        }
+        return node;
+    }
+
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
+
+        public DescriptorImpl()
+        {
+            super();
+            load();
+        }
+
         @Override
         public String getHelpFile() {
             return "/plugin/powershell/help.html";
