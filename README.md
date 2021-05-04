@@ -61,7 +61,8 @@ plugin works pretty much like the standard shell script support.
 
 -   Initial version
 
-[Unreleased]: https://github.com/jenkinsci/powershell-plugin/compare/plugin-usage-plugin-1.4...HEAD
+[Unreleased]: https://github.com/jenkinsci/powershell-plugin/compare/plugin-usage-plugin-1.5...HEAD
+[Version 1.5]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.4...powershell-1.5
 [Version 1.4]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.3...powershell-1.4
 [Version 1.3]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.2...powershell-1.3
 [Version 1.2]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.1...powershell-1.2
