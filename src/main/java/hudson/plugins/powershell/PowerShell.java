@@ -25,7 +25,7 @@ public class PowerShell extends CommandInterpreter {
 
     private final boolean stopOnError;
 
-    private TaskListener listener;
+    private transient TaskListener listener;
 
     @DataBoundConstructor
     public PowerShell(String command, boolean stopOnError, boolean useProfile) {
