@@ -76,6 +76,21 @@ public class PowerShellTest {
         r.assertBuildStatus(Result.SUCCESS, build);
     }
 
+    @Test
+    public void testBuildAndDisableProject() throws Exception {
+        Assume.assumeTrue(isPowerShellAvailable());
+
+        FreeStyleProject project1 = r.createFreeStyleProject("project1");
+        project1.getBuildersList().add(new PowerShell("echo 'Hello World!'", true, true));
+
+        QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
+        FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
+
+        r.assertBuildStatusSuccess(build);
+
+        project1.disable();
+    }
+
     private boolean isPowerShellAvailable() {
         return Stream.of(System.getenv("PATH").split(Pattern.quote(File.pathSeparator)))
                 .map(Paths::get)
