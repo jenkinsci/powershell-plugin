@@ -26,6 +26,8 @@ plugin works pretty much like the standard shell script support.
 
 ### [Unreleased]
 
+### [Version 1.6] (2021-09-20)
+
  - [fixed serialization issue that occurs in some scenarios](https://github.com/jenkinsci/powershell-plugin/pull/17), fixes [JENKINS-65613 After upgrading to powershell-plugin 1.5 enabling/disabling projects causes an error](https://issues.jenkins.io/browse/JENKINS-65613)
 
 ### [Version 1.5] (2021-05-04)
