@@ -29,12 +29,12 @@ THE SOFTWARE.
     codemirror-config="mode: 'text/x-groovy', lineNumbers: true, matchBrackets: true, onBlur: function(editor){editor.save()}"/>
  </f:entry>
 
-  <f:entry field="stopOnError" title="">
-       <f:checkbox title="Stop On Errors" name="stopOnError" checked="${instance.stopOnError}" default="true" />
+  <f:entry field="stopOnError" title="Stop On Errors">
+       <f:checkbox name="stopOnError" checked="${instance.stopOnError}" default="true" />
   </f:entry>
 
-   <f:entry field="useProfile" title="">
-    <f:checkbox title="${%Use PowerShell profile}" default="true" />
+   <f:entry field="useProfile" title="${%Use PowerShell profile}">
+    <f:checkbox default="true" />
   </f:entry>
 
 </j:jelly>
