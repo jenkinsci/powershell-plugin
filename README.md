@@ -26,6 +26,8 @@ plugin works pretty much like the standard shell script support.
 
 ### [Unreleased]
 
+### [Version 1.7] (2021-10-25)
+
  - [Bring PowerShell on par with BatchFile by supporting unstable builds](https://github.com/jenkinsci/powershell-plugin/pull/14)
 
 ### [Version 1.6] (2021-09-20)
@@ -67,7 +69,8 @@ plugin works pretty much like the standard shell script support.
 
 -   Initial version
 
-[Unreleased]: https://github.com/jenkinsci/powershell-plugin/compare/plugin-usage-plugin-1.6...HEAD
+[Unreleased]: https://github.com/jenkinsci/powershell-plugin/compare/plugin-usage-plugin-1.7...HEAD
+[Version 1.7]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.6...powershell-1.7
 [Version 1.6]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.5...powershell-1.6
 [Version 1.5]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.4...powershell-1.5
 [Version 1.4]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.3...powershell-1.4
