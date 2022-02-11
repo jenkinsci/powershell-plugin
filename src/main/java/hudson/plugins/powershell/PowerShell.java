@@ -129,10 +129,13 @@ public class PowerShell extends CommandInterpreter {
         switch (errorAction) {
             case "stopOnError":
                 sb.append("$ErrorActionPreference=\"Stop\"");
+                break;
             case "continueOnError":
                 sb.append("$ErrorActionPreference=\"Continue\"");
+                break;
             default:
                 sb.append("#No override to ErrorActionPreference selected");
+                break;
         }
         sb.append(System.lineSeparator());
         sb.append(command);
