@@ -142,6 +142,7 @@ public class PowerShellTest {
 
     @Test
     public void testBuildEncodingOnWindowsWithPowerShellCore() throws Exception {
+        Assume.assumeTrue(isPowerShellAvailable());
         Computer computer = r.jenkins.getComputer("");
         Assume.assumeTrue(Boolean.FALSE.equals(computer.isUnix()));
 
@@ -166,6 +167,7 @@ public class PowerShellTest {
 
     @Test
     public void testBuildEncodingOnWindowsWithBatch() throws Exception {
+        Assume.assumeTrue(isPowerShellAvailable());
         Computer computer = r.jenkins.getComputer("");
         Assume.assumeTrue(Boolean.FALSE.equals(computer.isUnix()));
 
