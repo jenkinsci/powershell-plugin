@@ -1,0 +1,6 @@
+<div>
+    <p>Provides an option to override the system's default ErrorActionPreference. "Stop on Error" stops the script when any step fails (similar to Shell set -e). "Continue on Error" writes the error to the console, but does not stop the script. If selected, this inserts `$ErrorActionPreference=Stop` or `$ErrorActionPreference=Continue` to the beginning of the script. As such, these options do not allow for a param() block at the beginning of your script.
+        <br />
+        <br />See <a href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_preference_variables?view=powershell-6#erroractionpreference">documentation</a>.
+    </p>
+</div>
