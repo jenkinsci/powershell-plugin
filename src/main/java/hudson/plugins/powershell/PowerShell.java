@@ -27,14 +27,14 @@ public class PowerShell extends CommandInterpreter {
 
     private Integer unstableReturn;
 
-    private String errorAction;
+    private final boolean stopOnError;
 
     private transient TaskListener listener;
 
     @DataBoundConstructor
-    public PowerShell(String command, String errorAction, boolean useProfile, Integer unstableReturn) {
+    public PowerShell(String command, boolean stopOnError, boolean useProfile, Integer unstableReturn) {
         super(command);
-        this.errorAction = errorAction;
+        this.stopOnError = stopOnError;
         this.useProfile = useProfile;
         this.unstableReturn = unstableReturn;
     }
@@ -53,6 +53,10 @@ public class PowerShell extends CommandInterpreter {
         }
     }
 
+    public boolean isStopOnError() {
+        return stopOnError;
+    }
+    
     public boolean isUseProfile() {
         return useProfile;
     }
@@ -126,18 +130,10 @@ public class PowerShell extends CommandInterpreter {
     @Override
     protected String getContents() {
         StringBuilder sb = new StringBuilder();
-        switch (errorAction) {
-            case "stopOnError":
-                sb.append("$ErrorActionPreference=\"Stop\"");
-                break;
-            case "continueOnError":
-                sb.append("$ErrorActionPreference=\"Continue\"");
-                break;
-            default:
-                sb.append("#No override to ErrorActionPreference selected");
-                break;
+        if (stopOnError) {
+            sb.append("$ErrorActionPreference=\"Stop\"");
+            sb.append(System.lineSeparator());
         }
-        sb.append(System.lineSeparator());
         sb.append(command);
         sb.append(System.lineSeparator());
         sb.append("exit $LastExitCode");

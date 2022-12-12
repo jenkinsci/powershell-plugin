@@ -29,13 +29,9 @@ THE SOFTWARE.
     codemirror-config="mode: 'text/x-groovy', lineNumbers: true, matchBrackets: true, onBlur: function(editor){editor.save()}"/>
  </f:entry>
 
-  <f:entry field="errorAction" title="Override Error Action">
-    <select name="errorAction">
-        <option value="noOverride">No Override</option>
-        <option value="stopOnError">Stop on Error</option>
-        <option value="continueOnError">Continue on Error</option>
-    </select>
-</f:entry>
+  <f:entry field="stopOnError" title="Stop On Errors">
+       <f:checkbox name="stopOnError" checked="${instance.stopOnError}" default="true" />
+  </f:entry>
 
    <f:entry field="useProfile" title="${%Use PowerShell profile}">
     <f:checkbox default="true" />

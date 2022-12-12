@@ -28,7 +28,7 @@ public class PowerShellTest {
     @Test
     public void testConfigRoundtrip() throws Exception {
         FreeStyleProject p = r.createFreeStyleProject();
-        PowerShell orig = new PowerShell("script", "noOverride", true, null);
+        PowerShell orig = new PowerShell("script", true, true, null);
         p.getBuildersList().add(orig);
 
         JenkinsRule.WebClient webClient = r.createWebClient();
@@ -44,7 +44,7 @@ public class PowerShellTest {
         Assume.assumeTrue(isPowerShellAvailable());
 
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("echo 'Hello World!'", "noOverride", true, null));
+        project1.getBuildersList().add(new PowerShell("echo 'Hello World!'", true, true, null));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
@@ -56,7 +56,7 @@ public class PowerShellTest {
     public void testBuildBadCommandFails() throws Exception {
         Assume.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("wrong command", "noOverride", true, null));
+        project1.getBuildersList().add(new PowerShell("wrong command", true, true, null));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
@@ -68,7 +68,7 @@ public class PowerShellTest {
     public void testBuildBadCommandsSucceeds() throws Exception {
         Assume.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("wrong command", "noOverride", true, null));
+        project1.getBuildersList().add(new PowerShell("wrong command", false, true, null));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
@@ -81,7 +81,7 @@ public class PowerShellTest {
         Assume.assumeTrue(isPowerShellAvailable());
 
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("echo 'Hello World!'", "noOverride", true, null));
+        project1.getBuildersList().add(new PowerShell("echo 'Hello World!'", true, true, null));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
@@ -95,7 +95,7 @@ public class PowerShellTest {
     public void testBuildUnstableEnabledSucceeds() throws Exception {
         Assume.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("exit 0", "noOverride", true, 123));
+        project1.getBuildersList().add(new PowerShell("exit 0", true, true, 123));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
@@ -107,7 +107,7 @@ public class PowerShellTest {
     public void testBuildUnstableEnabledBadCommandFails() throws Exception {
         Assume.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("exit 1", "noOverride", true, 123));
+        project1.getBuildersList().add(new PowerShell("exit 1", true, true, 123));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
@@ -119,7 +119,7 @@ public class PowerShellTest {
     public void testBuildUnstableEnabledBadCommandUnstableErrorCode() throws Exception {
         Assume.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("exit 123", "noOverride", true, 123));
+        project1.getBuildersList().add(new PowerShell("exit 123", true, true, 123));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
