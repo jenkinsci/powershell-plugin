@@ -26,6 +26,8 @@ plugin works pretty much like the standard shell script support.
 
 ### [Unreleased]
 
+ - [Removes force insertion of '$ErrorActionPreference = "Continue"' if "Stop On Errors" is unchecked](https://github.com/jenkinsci/powershell-plugin/pull/21)
+
 ### [Version 1.7] (2021-10-25)
 
  - [Bring PowerShell on par with BatchFile by supporting unstable builds](https://github.com/jenkinsci/powershell-plugin/pull/14)
