@@ -26,6 +26,8 @@ plugin works pretty much like the standard shell script support.
 
 ### [Unreleased]
 
+ - [Use HTTPS instead of git](https://github.com/jenkinsci/powershell-plugin/pull/23)
+ 
 ### [Version 1.8] (2022-12-23)
 
  - [Removes force insertion of '$ErrorActionPreference = "Continue"' if "Stop On Errors" is unchecked](https://github.com/jenkinsci/powershell-plugin/pull/21)
