@@ -27,6 +27,7 @@ plugin works pretty much like the standard shell script support.
 ### [Unreleased]
 
  - [Use HTTPS instead of git](https://github.com/jenkinsci/powershell-plugin/pull/23)
+ - [Updates parent pom to 4.51](https://github.com/jenkinsci/powershell-plugin/pull/22)
  
 ### [Version 1.8] (2022-12-23)
 
