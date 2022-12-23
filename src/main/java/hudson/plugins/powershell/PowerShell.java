@@ -56,7 +56,7 @@ public class PowerShell extends CommandInterpreter {
     public boolean isStopOnError() {
         return stopOnError;
     }
-
+    
     public boolean isUseProfile() {
         return useProfile;
     }
@@ -132,10 +132,8 @@ public class PowerShell extends CommandInterpreter {
         StringBuilder sb = new StringBuilder();
         if (stopOnError) {
             sb.append("$ErrorActionPreference=\"Stop\"");
-        } else {
-            sb.append("$ErrorActionPreference=\"Continue\"");
+            sb.append(System.lineSeparator());
         }
-        sb.append(System.lineSeparator());
         sb.append(command);
         sb.append(System.lineSeparator());
         sb.append("exit $LastExitCode");

@@ -1,3 +1,5 @@
 <div>
-    <p>Stops script when some step fails. Similar to Shell set -e. Translates to $ErrorActionPreference Stop or Continue. See <a href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_preference_variables?view=powershell-6#erroractionpreference">documentation</a>.</p>
+    <p>Stops script when some step fails. Similar to Shell set -e. Translates to inserting the line '$ErrorActionPreference = "Stop"' into the beginning of your command block. <a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_preference_variables?view=powershell-7.3#erroractionpreference">See documentation on ErrorActionPreference</a>.
+    <br />However, this can break scripts that have advanced parameter blocks, specifically those utilizing '[CmdletBinding()]' in the beginning as this must be the first executable line in a scriptblock, resulting in an 'UnexpectedAttribute' error.
+    </p>
 </div>
