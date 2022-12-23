@@ -53,6 +53,44 @@ public class PowerShellTest {
     }
 
     @Test
+    public void testBuildParameterBlockWithStopFails() throws Exception {
+        Assume.assumeTrue(isPowerShellAvailable());
+
+        FreeStyleProject project1 = r.createFreeStyleProject("project1");
+        project1.getBuildersList().add(new PowerShell("param(\n" +
+                "    [Parameter()][String] $Param1 = \"this parameter #1\",\n" +
+                "    [Parameter()][String] $Param2 = \"this parameter #2\"\n" +
+                ")\n" +
+                "\n" +
+                "Write-Host $Param1\n" +
+                "Write-Host $Param2", true, true, null));
+
+        QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
+        FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
+
+        r.assertBuildStatus(Result.FAILURE, build);
+    }
+
+    @Test
+    public void testBuildParameterBlockWithoutStopSucceeds() throws Exception {
+        Assume.assumeTrue(isPowerShellAvailable());
+
+        FreeStyleProject project1 = r.createFreeStyleProject("project1");
+        project1.getBuildersList().add(new PowerShell("param(\n" +
+                "    [Parameter()][String] $Param1 = \"this parameter #1\",\n" +
+                "    [Parameter()][String] $Param2 = \"this parameter #2\"\n" +
+                ")\n" +
+                "\n" +
+                "Write-Host $Param1\n" +
+                "Write-Host $Param2", false, true, null));
+
+        QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
+        FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
+
+        r.assertBuildStatusSuccess(build);
+    }
+
+    @Test
     public void testBuildBadCommandFails() throws Exception {
         Assume.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
