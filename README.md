@@ -26,6 +26,8 @@ plugin works pretty much like the standard shell script support.
 
 ### [Unreleased]
 
+### [Version 2.0] (2023-01-06)
+
  - [Use HTTPS instead of git](https://github.com/jenkinsci/powershell-plugin/pull/23)
  - [Updates parent pom to 4.51](https://github.com/jenkinsci/powershell-plugin/pull/22)
  - [Require Jenkins 2.361.4 and Java 11](https://github.com/jenkinsci/powershell-plugin/pull/24)
@@ -77,7 +79,8 @@ plugin works pretty much like the standard shell script support.
 
 -   Initial version
 
-[Unreleased]: https://github.com/jenkinsci/powershell-plugin/compare/plugin-usage-plugin-1.8...HEAD
+[Unreleased]: https://github.com/jenkinsci/powershell-plugin/compare/plugin-usage-plugin-2.0...HEAD
+[Version 2.0]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.8...powershell-2.0
 [Version 1.8]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.7...powershell-1.8
 [Version 1.7]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.6...powershell-1.7
 [Version 1.6]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.5...powershell-1.6
