@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>4.51</version>
+    <version>4.53</version>
   </parent>
   
   <artifactId>powershell</artifactId>
@@ -34,12 +34,13 @@
   <scm>
     <connection>scm:git:https://github.com/jenkinsci/powershell-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/powershell-plugin.git</developerConnection>
-    <url>http://github.com/jenkinsci/powershell-plugin</url>
+    <url>https://github.com/jenkinsci/powershell-plugin</url>
     <tag>HEAD</tag>
   </scm>
 
   <properties>
-      <java.level>8</java.level>
+    <java.level>11</java.level>
+    <jenkins.version>2.361.4</jenkins.version>
   </properties>
 
   <repositories>
