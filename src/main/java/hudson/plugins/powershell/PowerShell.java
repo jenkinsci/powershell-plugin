@@ -105,8 +105,7 @@ public class PowerShell extends CommandInterpreter {
                 e.printStackTrace();
             }
         }
-        if (powerShellExecutable == null)
-        {
+        if (powerShellExecutable == null) {
             powerShellExecutable = PowerShellInstallation.getDefaultPowershellWhenNoConfiguration(isRunningOnWindows(script));
         }
 
@@ -130,6 +129,8 @@ public class PowerShell extends CommandInterpreter {
     @Override
     protected String getContents() {
         StringBuilder sb = new StringBuilder();
+        sb.append("$OutputEncoding = [Console]::InputEncoding = [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding");
+        sb.append(System.lineSeparator());
         if (stopOnError) {
             sb.append("$ErrorActionPreference=\"Stop\"");
             sb.append(System.lineSeparator());
@@ -165,8 +166,7 @@ public class PowerShell extends CommandInterpreter {
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
-        public DescriptorImpl()
-        {
+        public DescriptorImpl() {
             super();
             load();
         }
