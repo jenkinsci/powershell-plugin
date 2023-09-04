@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>4.66</version>
+    <version>4.73</version>
   </parent>
   
   <artifactId>powershell</artifactId>
@@ -39,7 +39,6 @@
   </scm>
 
   <properties>
-    <java.level>11</java.level>
     <jenkins.version>2.361.4</jenkins.version>
   </properties>
 
