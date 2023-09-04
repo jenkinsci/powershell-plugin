@@ -27,6 +27,7 @@ plugin works pretty much like the standard shell script support.
 ### [Unreleased]
 
  - [Upgrade HtmlUnit from 2.x to 3.x](https://github.com/jenkinsci/powershell-plugin/pull/25)
+ - [Support building on Java 21](https://github.com/jenkinsci/powershell-plugin/pull/27)
 
 ### [Version 2.0] (2023-01-06)
 
