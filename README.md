@@ -26,6 +26,8 @@ plugin works pretty much like the standard shell script support.
 
 ### [Unreleased]
 
+### [Version 2.1] (2023-09-05)
+
  - [Upgrade HtmlUnit from 2.x to 3.x](https://github.com/jenkinsci/powershell-plugin/pull/25)
  - [Support building on Java 21](https://github.com/jenkinsci/powershell-plugin/pull/27)
  - [JENKINS-71515 Make codemirror-config a valid JSON](https://github.com/jenkinsci/powershell-plugin/pull/26)
