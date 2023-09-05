@@ -26,7 +26,7 @@ THE SOFTWARE.
 
   <f:entry title="${%Command}" description="${%description(rootURL)}">
     <f:textarea name="command" value="${instance.command}" checkMethod="post" codemirror-mode="clike"
-    codemirror-config='"mode": "text/x-groovy", "lineNumbers": true, "matchBrackets": true'/>
+    codemirror-config='"mode": "text/x-csharp", "lineNumbers": true, "matchBrackets": true'/>
  </f:entry>
 
   <f:entry field="stopOnError" title="Stop On Errors">
