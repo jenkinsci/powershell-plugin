@@ -1,5 +1,6 @@
 package hudson.plugins.powershell;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import hudson.EnvVars;
 import hudson.Extension;
@@ -20,7 +21,6 @@ import org.kohsuke.stapler.StaplerRequest;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class PowerShellInstallation extends ToolInstallation implements NodeSpecific<PowerShellInstallation>,
         EnvironmentSpecific<PowerShellInstallation> {
@@ -38,7 +38,7 @@ public class PowerShellInstallation extends ToolInstallation implements NodeSpec
     }
 
     @Override
-    public PowerShellInstallation forNode(@Nonnull Node node, TaskListener log) throws IOException, InterruptedException {
+    public PowerShellInstallation forNode(@NonNull Node node, TaskListener log) throws IOException, InterruptedException {
         return new PowerShellInstallation(getName(), translateFor(node, log), getProperties());
     }
 
@@ -85,7 +85,7 @@ public class PowerShellInstallation extends ToolInstallation implements NodeSpec
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public String getDisplayName() {
             return "PowerShell";
         }
