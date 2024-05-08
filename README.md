@@ -26,6 +26,8 @@ plugin works pretty much like the standard shell script support.
 
 ### [Unreleased]
 
+ - [Replace JSR-305 annotations with spotbugs annotations](https://github.com/jenkinsci/powershell-plugin/pull/29)
+ 
 ### [Version 2.1] (2023-09-05)
 
  - [Upgrade HtmlUnit from 2.x to 3.x](https://github.com/jenkinsci/powershell-plugin/pull/25)
