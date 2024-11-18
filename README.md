@@ -88,7 +88,7 @@ plugin works pretty much like the standard shell script support.
 
 -   Initial version
 
-[Unreleased]: https://github.com/jenkinsci/powershell-plugin/compare/plugin-usage-plugin-2.1...HEAD
+[Unreleased]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-2.1...HEAD
 [Version 2.1]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-2.0...powershell-2.1
 [Version 2.0]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.8...powershell-2.0
 [Version 1.8]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.7...powershell-1.8
