@@ -7,7 +7,7 @@
   </parent>
   
   <artifactId>powershell</artifactId>
-  <version>2.2-SNAPSHOT</version>
+  <version>2.2</version>
   <packaging>hpi</packaging>
   
   <name>Jenkins PowerShell plugin</name>
@@ -35,7 +35,7 @@
     <connection>scm:git:https://github.com/jenkinsci/powershell-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/powershell-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/powershell-plugin</url>
-    <tag>HEAD</tag>
+    <tag>powershell-2.2</tag>
   </scm>
 
   <properties>
