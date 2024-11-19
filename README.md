@@ -26,6 +26,8 @@ plugin works pretty much like the standard shell script support.
 
 ### [Unreleased]
 
+### [Version 2.2] (2024-11-19)
+
  - [Replace JSR-305 annotations with spotbugs annotations](https://github.com/jenkinsci/powershell-plugin/pull/29)
  - [Upgrade Jenkins core from 2.361.4 to 2.452.4](https://github.com/jenkinsci/powershell-plugin/pull/31)
  
@@ -89,7 +91,8 @@ plugin works pretty much like the standard shell script support.
 
 -   Initial version
 
-[Unreleased]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-2.1...HEAD
+[Unreleased]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-2.2...HEAD
+[Version 2.2]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-2.1...powershell-2.2
 [Version 2.1]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-2.0...powershell-2.1
 [Version 2.0]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.8...powershell-2.0
 [Version 1.8]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.7...powershell-1.8
