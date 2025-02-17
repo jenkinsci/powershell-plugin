@@ -16,7 +16,7 @@ import hudson.tools.ToolProperty;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerRequest2;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -91,7 +91,7 @@ public class PowerShellInstallation extends ToolInstallation implements NodeSpec
         }
 
         @Override
-        public boolean configure(StaplerRequest req, JSONObject json) {
+        public boolean configure(StaplerRequest2 req, JSONObject json) {
             setInstallations(req.bindJSONToList(PowerShellInstallation.class, json.get("tool"))
                     .toArray((PowerShellInstallation[]) Array.newInstance(PowerShellInstallation.class, 0)));
             save();
