@@ -26,6 +26,8 @@ plugin works pretty much like the standard shell script support.
 
 ### [Unreleased]
 
+ - [Migrate from EE 8 to EE 9](https://github.com/jenkinsci/powershell-plugin/pull/32)
+
 ### [Version 2.2] (2024-11-19)
 
  - [Replace JSR-305 annotations with spotbugs annotations](https://github.com/jenkinsci/powershell-plugin/pull/29)
