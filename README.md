@@ -26,6 +26,8 @@ plugin works pretty much like the standard shell script support.
 
 ### [Unreleased]
 
+### [Version 2.3] (2025-02-17)
+
  - [Migrate from EE 8 to EE 9](https://github.com/jenkinsci/powershell-plugin/pull/32)
 
 ### [Version 2.2] (2024-11-19)
@@ -93,7 +95,8 @@ plugin works pretty much like the standard shell script support.
 
 -   Initial version
 
-[Unreleased]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-2.2...HEAD
+[Unreleased]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-2.3...HEAD
+[Version 2.3]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-2.2...powershell-2.3
 [Version 2.2]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-2.1...powershell-2.2
 [Version 2.1]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-2.0...powershell-2.1
 [Version 2.0]: https://github.com/jenkinsci/powershell-plugin/compare/powershell-1.8...powershell-2.0
