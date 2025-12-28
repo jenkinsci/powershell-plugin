@@ -26,6 +26,8 @@ plugin works pretty much like the standard shell script support.
 
 ### [Unreleased]
 
+ - [Test with Java 25](https://github.com/jenkinsci/powershell-plugin/pull/33)
+
 ### [Version 2.3] (2025-02-17)
 
  - [Migrate from EE 8 to EE 9](https://github.com/jenkinsci/powershell-plugin/pull/32)
