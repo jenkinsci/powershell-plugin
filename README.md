@@ -28,6 +28,7 @@ plugin works pretty much like the standard shell script support.
 
  - [Test with Java 25](https://github.com/jenkinsci/powershell-plugin/pull/33)
  - [Migrate tests to JUnit5](https://github.com/jenkinsci/powershell-plugin/pull/35)
+ - [Automate dependency updates](https://github.com/jenkinsci/powershell-plugin/pull/36)
 
 ### [Version 2.3] (2025-02-17)
 
