@@ -30,6 +30,7 @@ plugin works pretty much like the standard shell script support.
  - [Migrate tests to JUnit5](https://github.com/jenkinsci/powershell-plugin/pull/35)
  - [Automate dependency updates](https://github.com/jenkinsci/powershell-plugin/pull/36)
  - [Ban JUnit 4 imports](https://github.com/jenkinsci/powershell-plugin/pull/38)
+ - [Bump org.jenkins-ci.plugins:plugin from 5.28 to 5.2102.v5f5fe09fccf1](https://github.com/jenkinsci/powershell-plugin/pull/37)
 
 ### [Version 2.3] (2025-02-17)
 
