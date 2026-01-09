@@ -12,36 +12,35 @@ import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.Result;
 import hudson.model.queue.QueueTaskFuture;
-import org.junit.Assume;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
 /**
  * @author Kohsuke Kawaguchi
  */
+@WithJenkins
 public class PowerShellTest {
 
-    @Rule
-    public JenkinsRule r = new JenkinsRule();
-
     @Test
-    public void testConfigRoundtrip() throws Exception {
+    void testConfigRoundtrip(JenkinsRule r) throws Exception {
         FreeStyleProject p = r.createFreeStyleProject();
         PowerShell orig = new PowerShell("script", true, true, null);
         p.getBuildersList().add(orig);
 
-        JenkinsRule.WebClient webClient = r.createWebClient();
-        HtmlPage page = webClient.getPage(p, "configure");
-        HtmlForm form = page.getFormByName("config");
-        r.submit(form);
+        try (JenkinsRule.WebClient webClient = r.createWebClient()) {
+            HtmlPage page = webClient.getPage(p, "configure");
+            HtmlForm form = page.getFormByName("config");
+            r.submit(form);
+        }
 
         r.assertEqualBeans(orig, p.getBuildersList().get(PowerShell.class), "command");
     }
 
     @Test
-    public void testBuildSuccess() throws Exception {
-        Assume.assumeTrue(isPowerShellAvailable());
+    void testBuildSuccess(JenkinsRule r) throws Exception {
+        Assumptions.assumeTrue(isPowerShellAvailable());
 
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
         project1.getBuildersList().add(new PowerShell("echo 'Hello World!'", true, true, null));
@@ -53,17 +52,18 @@ public class PowerShellTest {
     }
 
     @Test
-    public void testBuildParameterBlockWithStopFails() throws Exception {
-        Assume.assumeTrue(isPowerShellAvailable());
+    void testBuildParameterBlockWithStopFails(JenkinsRule r) throws Exception {
+        Assumptions.assumeTrue(isPowerShellAvailable());
 
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("param(\n" +
-                "    [Parameter()][String] $Param1 = \"this parameter #1\",\n" +
-                "    [Parameter()][String] $Param2 = \"this parameter #2\"\n" +
-                ")\n" +
-                "\n" +
-                "Write-Host $Param1\n" +
-                "Write-Host $Param2", true, true, null));
+        project1.getBuildersList().add(new PowerShell("""
+                param(
+                    [Parameter()][String] $Param1 = "this parameter #1",
+                    [Parameter()][String] $Param2 = "this parameter #2"
+                )
+                
+                Write-Host $Param1
+                Write-Host $Param2""", true, true, null));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
@@ -72,17 +72,18 @@ public class PowerShellTest {
     }
 
     @Test
-    public void testBuildParameterBlockWithoutStopSucceeds() throws Exception {
-        Assume.assumeTrue(isPowerShellAvailable());
+    void testBuildParameterBlockWithoutStopSucceeds(JenkinsRule r) throws Exception {
+        Assumptions.assumeTrue(isPowerShellAvailable());
 
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
-        project1.getBuildersList().add(new PowerShell("param(\n" +
-                "    [Parameter()][String] $Param1 = \"this parameter #1\",\n" +
-                "    [Parameter()][String] $Param2 = \"this parameter #2\"\n" +
-                ")\n" +
-                "\n" +
-                "Write-Host $Param1\n" +
-                "Write-Host $Param2", false, true, null));
+        project1.getBuildersList().add(new PowerShell("""
+                param(
+                    [Parameter()][String] $Param1 = "this parameter #1",
+                    [Parameter()][String] $Param2 = "this parameter #2"
+                )
+                
+                Write-Host $Param1
+                Write-Host $Param2""", false, true, null));
 
         QueueTaskFuture<FreeStyleBuild> freeStyleBuildQueueTaskFuture = project1.scheduleBuild2(0);
         FreeStyleBuild build = freeStyleBuildQueueTaskFuture.get();
@@ -91,8 +92,8 @@ public class PowerShellTest {
     }
 
     @Test
-    public void testBuildBadCommandFails() throws Exception {
-        Assume.assumeTrue(isPowerShellAvailable());
+    void testBuildBadCommandFails(JenkinsRule r) throws Exception {
+        Assumptions.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
         project1.getBuildersList().add(new PowerShell("wrong command", true, true, null));
 
@@ -103,8 +104,8 @@ public class PowerShellTest {
     }
 
     @Test
-    public void testBuildBadCommandsSucceeds() throws Exception {
-        Assume.assumeTrue(isPowerShellAvailable());
+    void testBuildBadCommandsSucceeds(JenkinsRule r) throws Exception {
+        Assumptions.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
         project1.getBuildersList().add(new PowerShell("wrong command", false, true, null));
 
@@ -115,8 +116,8 @@ public class PowerShellTest {
     }
 
     @Test
-    public void testBuildAndDisableProject() throws Exception {
-        Assume.assumeTrue(isPowerShellAvailable());
+    void testBuildAndDisableProject(JenkinsRule r) throws Exception {
+        Assumptions.assumeTrue(isPowerShellAvailable());
 
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
         project1.getBuildersList().add(new PowerShell("echo 'Hello World!'", true, true, null));
@@ -130,8 +131,8 @@ public class PowerShellTest {
     }
 
     @Test
-    public void testBuildUnstableEnabledSucceeds() throws Exception {
-        Assume.assumeTrue(isPowerShellAvailable());
+    void testBuildUnstableEnabledSucceeds(JenkinsRule r) throws Exception {
+        Assumptions.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
         project1.getBuildersList().add(new PowerShell("exit 0", true, true, 123));
 
@@ -142,8 +143,8 @@ public class PowerShellTest {
     }
 
     @Test
-    public void testBuildUnstableEnabledBadCommandFails() throws Exception {
-        Assume.assumeTrue(isPowerShellAvailable());
+    void testBuildUnstableEnabledBadCommandFails(JenkinsRule r) throws Exception {
+        Assumptions.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
         project1.getBuildersList().add(new PowerShell("exit 1", true, true, 123));
 
@@ -154,8 +155,8 @@ public class PowerShellTest {
     }
 
     @Test
-    public void testBuildUnstableEnabledBadCommandUnstableErrorCode() throws Exception {
-        Assume.assumeTrue(isPowerShellAvailable());
+    void testBuildUnstableEnabledBadCommandUnstableErrorCode(JenkinsRule r) throws Exception {
+        Assumptions.assumeTrue(isPowerShellAvailable());
         FreeStyleProject project1 = r.createFreeStyleProject("project1");
         project1.getBuildersList().add(new PowerShell("exit 123", true, true, 123));
 
