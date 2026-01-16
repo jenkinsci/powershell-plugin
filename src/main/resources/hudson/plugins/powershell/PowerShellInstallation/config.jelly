@@ -4,7 +4,10 @@
     <f:entry title="${%Name}" field="name">
         <f:textbox/>
     </f:entry>
-    <f:entry title="${%Path to Powershell}" field="home">
-        <f:textbox/>
+    <f:entry title="${%Powershell home}" field="powershellHome">
+        <f:textbox name="home" />
+    </f:entry>
+    <f:entry title="${%Powershell executable}" field="executable">
+        <f:textbox default="pwsh" />
     </f:entry>
 </j:jelly>
