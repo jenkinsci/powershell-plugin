@@ -32,6 +32,7 @@ plugin works pretty much like the standard shell script support.
  - [Ban JUnit 4 imports](https://github.com/jenkinsci/powershell-plugin/pull/38)
  - [Bump org.jenkins-ci.plugins:plugin from 5.28 to 5.2102.v5f5fe09fccf1](https://github.com/jenkinsci/powershell-plugin/pull/37)
  - [Require 2.504.3 as minimum Jenkins version](https://github.com/jenkinsci/powershell-plugin/pull/39)
+ - [Migrate Commons Lang from 2 to 3](https://github.com/jenkinsci/powershell-plugin/pull/40)
 
 ### [Version 2.3] (2025-02-17)
 
