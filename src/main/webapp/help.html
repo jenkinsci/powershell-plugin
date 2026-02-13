@@ -8,7 +8,8 @@
   By default, PowerShell processes profile scripts at startup. 
   This can be disabled to improve startup time, avoid any potential conflict and provide a clean shell.
 
-  On Windows it uses PowerShell.exe and on Linux pwsh (PowerShell Core)
+  The used PowerShell binary is defined by the tool configuration.
+  (DefaultWindows is used under Windows and DefaultLinux under Linux)
   
   <p>
     If you already have a batch file in SCM, you can just type in the path of that PowerShell file
