@@ -51,7 +51,7 @@
     <dependency>
       <groupId>io.jenkins.plugins</groupId>
       <artifactId>commons-lang3-api</artifactId>
-      <version>3.20.0-109.ve43756e2d2b_4</version>
+      <version>3.20.0-114.v963fca_7b_5875</version>
     </dependency>
   </dependencies>
 
