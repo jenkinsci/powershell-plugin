@@ -47,13 +47,25 @@
     <ban-junit4-imports.skip>false</ban-junit4-imports.skip>
     <ban-commons-lang-2.skip>false</ban-commons-lang-2.skip>
   </properties>
+
   <dependencies>
     <dependency>
       <groupId>io.jenkins.plugins</groupId>
       <artifactId>commons-lang3-api</artifactId>
-      <version>3.20.0-109.ve43756e2d2b_4</version>
     </dependency>
   </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.jenkins.tools.bom</groupId>
+        <artifactId>bom-${jenkins.baseline}.x</artifactId>
+        <version>5054.v620b_5d2b_d5e6</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <repositories>
     <repository>
