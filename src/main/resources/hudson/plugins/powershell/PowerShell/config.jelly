@@ -27,14 +27,18 @@ THE SOFTWARE.
   <f:entry title="${%Command}" description="${%description(rootURL)}">
     <f:textarea name="command" value="${instance.command}" checkMethod="post" codemirror-mode="clike"
     codemirror-config='"mode": "text/x-csharp", "lineNumbers": true, "matchBrackets": true'/>
- </f:entry>
-
-  <f:entry field="stopOnError" title="Stop On Errors">
-       <f:checkbox name="stopOnError" checked="${instance.stopOnError}" default="true" />
   </f:entry>
 
-   <f:entry field="useProfile" title="${%Use PowerShell profile}">
+  <f:entry field="stopOnError" title="Stop On Errors">
+    <f:checkbox name="stopOnError" checked="${instance.stopOnError}" default="true" />
+  </f:entry>
+
+  <f:entry field="useProfile" title="${%Use PowerShell profile}">
     <f:checkbox default="true" />
+  </f:entry>
+
+  <f:entry field="installation" title="${%PowerShell tool}">
+    <f:select/>
   </f:entry>
 
   <f:advanced>
