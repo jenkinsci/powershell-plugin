@@ -82,23 +82,23 @@ class PowerShellInstallationTest {
         assertAll(
                 () -> assertEquals(5, descriptor.getInstallations().length),
 
-                () -> assertNull(descriptor.getInstallation("DefaultWindows").getHome()),
+                () -> assertNull(descriptor.getInstallation("DefaultWindows").getPowershellHome()),
                 () -> assertEquals("powershell.exe", descriptor.getInstallation("DefaultWindows").getPowerShellBinary()),
                 () -> assertEquals(0, descriptor.getInstallation("DefaultWindows").getProperties().size()),
 
-                () -> assertNull(descriptor.getInstallation("DefaultLinux").getHome()),
+                () -> assertNull(descriptor.getInstallation("DefaultLinux").getPowershellHome()),
                 () -> assertEquals("pwsh", descriptor.getInstallation("DefaultLinux").getPowerShellBinary()),
                 () -> assertEquals(0, descriptor.getInstallation("DefaultLinux").getProperties().size()),
 
-                () -> assertNull(descriptor.getInstallation("powershell-7.5.5-linux-x64").getHome()),
+                () -> assertNull(descriptor.getInstallation("powershell-7.5.5-linux-x64").getPowershellHome()),
                 () -> assertEquals("pwsh", descriptor.getInstallation("powershell-7.5.5-linux-x64").getPowerShellBinary()),
                 () -> assertEquals(1, descriptor.getInstallation("powershell-7.5.5-linux-x64").getProperties().size()),
 
-                () -> assertEquals("/snap/bin", descriptor.getInstallation("snap").getHome()),
+                () -> assertEquals("/snap/bin", descriptor.getInstallation("snap").getPowershellHome()),
                 () -> assertEquals("pwsh", descriptor.getInstallation("snap").getPowerShellBinary()),
                 () -> assertEquals(0, descriptor.getInstallation("snap").getProperties().size()),
 
-                () -> assertEquals("c:\\powershell1", descriptor.getInstallation("Windows 1").getHome()),
+                () -> assertEquals("c:\\powershell1", descriptor.getInstallation("Windows 1").getPowershellHome()),
                 () -> assertEquals("powershell.exe", descriptor.getInstallation("Windows 1").getPowerShellBinary()),
                 () -> assertEquals(0, descriptor.getInstallation("Windows 1").getProperties().size())
         );
@@ -146,6 +146,59 @@ class PowerShellInstallationTest {
                           <properties/>
                           <powershellHome>c:\\powershell1</powershellHome>
                           <executable>powershell.exe</executable>
+                        </hudson.plugins.powershell.PowerShellInstallation>
+                      </installations>
+                    </hudson.plugins.powershell.PowerShellInstallation_-DescriptorImpl>""", xmlAfter);
+    }
+
+    @Test
+    public void testReadResolveOldConfigOverriddenDefaults() {
+        String xml = """
+                    <hudson.plugins.powershell.PowerShellInstallation_-DescriptorImpl plugin="powershell@2.4-SNAPSHOT">
+                      <installations class="hudson.plugins.powershell.PowerShellInstallation-array">
+                        <hudson.plugins.powershell.PowerShellInstallation>
+                          <name>DefaultWindows</name>
+                          <home>C:\\installation1\\pwsh.exe</home>
+                          <properties/>
+                        </hudson.plugins.powershell.PowerShellInstallation>
+                        <hudson.plugins.powershell.PowerShellInstallation>
+                          <name>DefaultLinux</name>
+                          <home>pwsh2</home>
+                          <properties/>
+                        </hudson.plugins.powershell.PowerShellInstallation>
+                      </installations>
+                    </hudson.plugins.powershell.PowerShellInstallation_-DescriptorImpl>
+                """;
+
+        final var descriptor = (PowerShellInstallation.DescriptorImpl) Jenkins.XSTREAM2.fromXML(xml);
+
+        assertAll(
+                () -> assertEquals(2, descriptor.getInstallations().length),
+
+                () -> assertNull(descriptor.getInstallation("DefaultWindows").getPowershellHome()),
+                () -> assertEquals("C:\\installation1\\pwsh.exe", descriptor.getInstallation("DefaultWindows").getPowerShellBinary()),
+                () -> assertEquals(0, descriptor.getInstallation("DefaultWindows").getProperties().size()),
+
+                () -> assertNull(descriptor.getInstallation("DefaultLinux").getPowershellHome()),
+                () -> assertEquals("pwsh2", descriptor.getInstallation("DefaultLinux").getPowerShellBinary()),
+                () -> assertEquals(0, descriptor.getInstallation("DefaultLinux").getProperties().size())
+        );
+
+        final var xmlAfter = Jenkins.XSTREAM2.toXML(descriptor);
+        assertEquals("""
+                    <hudson.plugins.powershell.PowerShellInstallation_-DescriptorImpl>
+                      <installations class="hudson.plugins.powershell.PowerShellInstallation-array">
+                        <hudson.plugins.powershell.PowerShellInstallation>
+                          <name>DefaultWindows</name>
+                          <home>C:\\installation1\\pwsh.exe</home>
+                          <properties/>
+                          <executable>C:\\installation1\\pwsh.exe</executable>
+                        </hudson.plugins.powershell.PowerShellInstallation>
+                        <hudson.plugins.powershell.PowerShellInstallation>
+                          <name>DefaultLinux</name>
+                          <home>pwsh2</home>
+                          <properties/>
+                          <executable>pwsh2</executable>
                         </hudson.plugins.powershell.PowerShellInstallation>
                       </installations>
                     </hudson.plugins.powershell.PowerShellInstallation_-DescriptorImpl>""", xmlAfter);
@@ -200,23 +253,23 @@ class PowerShellInstallationTest {
         assertAll(
                 () -> assertEquals(5, descriptor.getInstallations().length),
 
-                () -> assertNull(descriptor.getInstallation("DefaultWindows").getHome()),
+                () -> assertNull(descriptor.getInstallation("DefaultWindows").getPowershellHome()),
                 () -> assertEquals("powershell.exe", descriptor.getInstallation("DefaultWindows").getPowerShellBinary()),
                 () -> assertEquals(0, descriptor.getInstallation("DefaultWindows").getProperties().size()),
 
-                () -> assertNull(descriptor.getInstallation("DefaultLinux").getHome()),
+                () -> assertNull(descriptor.getInstallation("DefaultLinux").getPowershellHome()),
                 () -> assertEquals("pwsh", descriptor.getInstallation("DefaultLinux").getPowerShellBinary()),
                 () -> assertEquals(0, descriptor.getInstallation("DefaultLinux").getProperties().size()),
 
-                () -> assertNull(descriptor.getInstallation("powershell-7.5.5-linux-x64").getHome()),
+                () -> assertNull(descriptor.getInstallation("powershell-7.5.5-linux-x64").getPowershellHome()),
                 () -> assertEquals("pwsh", descriptor.getInstallation("powershell-7.5.5-linux-x64").getPowerShellBinary()),
                 () -> assertEquals(1, descriptor.getInstallation("powershell-7.5.5-linux-x64").getProperties().size()),
 
-                () -> assertEquals("/snap/bin", descriptor.getInstallation("snap").getHome()),
+                () -> assertEquals("/snap/bin", descriptor.getInstallation("snap").getPowershellHome()),
                 () -> assertEquals("pwsh", descriptor.getInstallation("snap").getPowerShellBinary()),
                 () -> assertEquals(0, descriptor.getInstallation("snap").getProperties().size()),
 
-                () -> assertEquals("c:\\powershell1", descriptor.getInstallation("Windows 1").getHome()),
+                () -> assertEquals("c:\\powershell1", descriptor.getInstallation("Windows 1").getPowershellHome()),
                 () -> assertEquals("powershell.exe", descriptor.getInstallation("Windows 1").getPowerShellBinary()),
                 () -> assertEquals(0, descriptor.getInstallation("Windows 1").getProperties().size())
         );
