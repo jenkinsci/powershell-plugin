@@ -113,11 +113,16 @@ public class PowerShellInstallation extends ToolInstallation implements NodeSpec
     @Override
     protected Object readResolve() {
         if (this.executable == null) {
+            final var name = super.getName();
             final var home = super.getHome();
             if (home == null) {
                 this.executable = DEFAULT_LINUX_EXECUTABLE;
                 this.powershellHome = null;
-            } else if (DEFAULT_LINUX_EXECUTABLE.equals(home) || DEFAULT_WINDOWS_EXECUTABLE.equals(home)) {
+            } else if (DEFAULT_LINUX_NAME.equals(name) ||
+                    DEFAULT_WINDOWS_NAME.equals(name) ||
+                    DEFAULT_LINUX_EXECUTABLE.equals(home) ||
+                    DEFAULT_WINDOWS_EXECUTABLE.equals(home)
+            ) {
                 this.executable = home;
                 this.powershellHome = null;
             } else if (home.endsWith(DEFAULT_LINUX_EXECUTABLE)) {
